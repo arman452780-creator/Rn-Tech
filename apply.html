@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Course | RN-TECH Premium Coaching</title>
+    <meta name="description" content="Apply for your selected course at RN-TECH Premium Coaching.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="apply.css">
+</head>
+
+<body class="dark-theme">
+
+    <!-- Navigation -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">RN-TECH<span class="accent">.</span></a>
+
+            <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span class="hamburger"></span>
+            </button>
+
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="courses.html" class="nav-link">Courses</a>
+                <a href="faculties.html" class="nav-link">Faculties</a>
+            </nav>
+        </div>
+    </header>
+
+    <main style="padding-top: 100px;">
+        <section class="apply-section section bg-darker" id="apply">
+            <div class="container apply-container">
+                <div class="apply-form-wrapper reveal-fade-up">
+                    <div class="section-header text-center">
+                        <span class="subtitle">Enroll Now</span>
+                        <h2 class="section-title">Apply for Course</h2>
+                    </div>
+                    
+                    <form id="courseApplyForm" class="contact-form">
+                        <div class="form-group">
+                            <label for="applyName">Name</label>
+                            <input type="text" id="applyName" name="name" required placeholder="Your Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="applyPhone">Mobile Number</label>
+                            <input type="tel" id="applyPhone" name="phone" required placeholder="Your Mobile Number">
+                        </div>
+                        <div class="form-group">
+                            <label for="applyCourse">Course Detail</label>
+                            <input type="text" id="applyCourse" name="course" readonly>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">RN-TECH<span class="accent">.</span></a>
+                <p>Strategic life and career coaching for high-achievers.</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Navigation</h4>
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="courses.html">Courses</a>
+                </div>
+                <div class="link-group">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom container">
+            <p>&copy; 2026 RN-TECH Coaching. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+
+</html>

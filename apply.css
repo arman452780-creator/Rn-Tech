@@ -1,0 +1,91 @@
+/* --- Apply Section --- */
+.apply-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.apply-form-wrapper {
+    background: var(--color-bg-card);
+    padding: 3.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-glass-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 600px;
+}
+
+.apply-form-wrapper .section-header {
+    margin-bottom: 2rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* --- Contact Form Styling (Shared logic with previous transparent design) --- */
+.contact-form {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: #dedede;
+}
+
+.contact-form input,
+.contact-form textarea,
+.contact-form select {
+    width: 100%;
+    padding: 0.8rem 0; /* Only vertical padding */
+    background: transparent; /* No glass background */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none; /* Remove all borders */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.4); /* Solid bottom border */
+    border-radius: 0; /* Remove rounded corners */
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus,
+.contact-form select:focus {
+    outline: none;
+    border-color: var(--color-accent); /* Keep accent color for bottom border on focus */
+    background: transparent;
+    box-shadow: none; /* No glow around the box */
+}
+
+/* Button */
+.btn-primary {
+    margin-top: 1rem;
+    padding: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #f7d181 100%);
+    box-shadow: 0 4px 20px rgba(224, 184, 90, 0.4);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 25px rgba(224, 184, 90, 0.6);
+    transform: translateY(-2px);
+}
