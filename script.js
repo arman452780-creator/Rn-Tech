@@ -236,4 +236,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Notice Auto-Scroll ---
+    const noticeBody = document.querySelector('.notice-body');
+    if (noticeBody) {
+        let isHovering = false;
+
+        noticeBody.addEventListener('mouseenter', () => {
+            isHovering = true;
+        });
+
+        noticeBody.addEventListener('mouseleave', () => {
+            isHovering = false;
+        });
+
+        // Auto scroll interval (20px per second)
+        setInterval(() => {
+            if (!isHovering) {
+                noticeBody.scrollTop += 1;
+                // If we reach the bottom, jump back to the top
+                if (Math.ceil(noticeBody.scrollTop) + noticeBody.clientHeight >= noticeBody.scrollHeight) {
+                    noticeBody.scrollTop = 0;
+                }
+            }
+        }, 50);
+    }
+
 });
