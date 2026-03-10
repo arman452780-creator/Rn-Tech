@@ -38,15 +38,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 2rem;
+    padding: 1.25rem 1.5rem;
     background: transparent;
     border: none;
     color: #fff;
-    font-size: 1.35rem;
+    font-size: clamp(1.1rem, 3vw, 1.35rem);
     font-weight: 500;
     cursor: pointer;
     font-family: var(--font-primary);
     transition: color 0.3s ease;
+}
+
+@media (max-width: 600px) {
+    .accordion-header {
+        padding: 1rem;
+    }
 }
 
 .accordion-item.active .accordion-header {
