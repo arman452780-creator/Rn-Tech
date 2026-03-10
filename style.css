@@ -62,10 +62,10 @@ svg {
 
 /* --- Layout utility --- */
 .container {
-    width: 90%;
+    width: 100%;
+    padding: 0 1rem;
     max-width: 1200px;
     margin: 0 auto;
-
 }
 
 .section {
@@ -385,7 +385,6 @@ p {
 
 /* Responsive */
 @media (max-width: 992px) {
-
     .about-container,
     .contact-container {
         grid-template-columns: 1fr;
@@ -393,6 +392,10 @@ p {
 
     .about-image-wrapper {
         order: -1;
+    }
+    
+    .section-title {
+        font-size: clamp(2rem, 6vw, 2.5rem);
     }
 }
 
@@ -427,13 +430,24 @@ p {
         font-size: 1.5rem;
     }
 
+    .logo {
+        font-size: 2.5rem;
+        margin-left: 10px;
+        background-size: 200%;
+    }
+
+    .footer-container {
+        gap: 2rem;
+    }
+
     .footer-links {
         flex-direction: column;
         gap: 2rem;
+        width: 100%;
     }
 }
 
-/* Responsive */
+/* Animations */
 @keyframes logo {
     0% {
         background-position: 0% ;
