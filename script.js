@@ -11,6 +11,70 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Image Slider ---
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    function showSlides(n) {
+        if (!slides.length) return; // Exit if no slider
+
+        if (n >= slides.length) { slideIndex = 0; }
+        if (n < 0) { slideIndex = slides.length - 1; }
+
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        slides[slideIndex].classList.add('active');
+        if(dots[slideIndex]) dots[slideIndex].classList.add('active');
+    }
+
+    function nextSlide() {
+        showSlides(++slideIndex);
+    }
+
+    function prevSlide() {
+        showSlides(--slideIndex);
+    }
+
+    if (slides.length > 0) {
+        let slideInterval;
+
+        function startTimer() {
+            clearInterval(slideInterval); // Clear any existing timer
+            slideInterval = setInterval(nextSlide, 4000); // Auto slide every 4 seconds
+        }
+
+        // Start auto slider initially
+        startTimer();
+
+        // Event listeners for buttons
+        if(prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                startTimer(); // Restart auto-play on manual interaction
+            });
+        }
+        
+        if(nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                startTimer(); // Restart auto-play on manual interaction
+            });
+        }
+
+        // Event listeners for dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                slideIndex = index;
+                showSlides(slideIndex);
+                startTimer(); // Restart auto-play on manual interaction
+            });
+        });
+    }
+
     // --- Mobile Menu Toggle ---
     const mobileToggle = document.querySelector('.mobile-toggle');
     const navLinks = document.querySelector('.nav-links');
