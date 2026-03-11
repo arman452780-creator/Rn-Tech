@@ -1,4 +1,5 @@
-l<!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -24,14 +25,15 @@ l<!DOCTYPE html>
     <!-- Navigation -->
     <header class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">RN-TECH<span class="accent">.</span></a>
+            <a href="index.html" class="logo">RN-TECH<span class="accent">.</span>
+            </a>
 
             <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
                 <span class="hamburger"></span>
             </button>
 
             <nav class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html" class="nav-link active">Home</a>
                 <a href="about.html" class="nav-link">About</a>
                 <a href="courses.html" class="nav-link">Courses</a>
                 <a href="faculties.html" class="nav-link">Faculties</a>
@@ -40,6 +42,35 @@ l<!DOCTYPE html>
     </header>
 
     <main>
+        <!-- Image Slider Section -->
+         <div class="imgbox">
+        <section class="image-slider">
+            <div class="slider-container">
+                <div class="slide active">
+                    <img src="slider_custom_1.jpeg" alt="Students in Lab Room" width="100%">
+                </div>
+                <div class="slide">
+                    <img src="slider_custom_2.jpeg" alt="Students with Certificates">
+                </div>
+                <div class="slide">
+                    <img src="" alt="Students at Computers">
+                </div>
+                
+                <!-- Navigation Arrows -->
+                <button class="slider-btn prev-btn" aria-label="Previous slide">&#10094;</button>
+                <button class="slider-btn next-btn" aria-label="Next slide">&#10095;</button>
+
+                <!-- Dots Pagination -->
+                <div class="slider-dots">
+                    <span class="dot active" data-slide="0"></span>
+                    <span class="dot" data-slide="1"></span>
+                    <span class="dot" data-slide="2"></span>
+                </div>
+            </div>
+
+        </section>
+        </div>
+
         <!-- Hero Section -->
         <section class="hero" id="home">
             <div class="hero-bg-glow"></div>
@@ -55,10 +86,10 @@ l<!DOCTYPE html>
                 </div>
 
                 <!-- Notice Column -->
-                
+
                 <div class="notice-column-wrapper reveal-slide-left">
                     <div class="notice-header">
-                        <h2>News & Events</h2>
+                        <h2>Notice</h2>
                     </div>
                     <div class="notice-body">
                         <div class="notice-scroller">
@@ -73,11 +104,11 @@ l<!DOCTYPE html>
                             <div class="notice-item">
                                 <p>N/A</p>
                             </div>
-                             <div class="notice-item">
+                            <div class="notice-item">
                                 <p>N/A</p>
                                 <span class="badge-new"></span>
                             </div>
-                            
+
                             <!-- Duplicate items for seamless scrolling if needed -->
                         </div>
                     </div>
@@ -89,7 +120,7 @@ l<!DOCTYPE html>
 
     <!-- Footer -->
     <footer class="footer">
-       
+
         <div class="footer-bottom container">
             <p>&copy; 2026 Devlop by Armaan. All rights reserved.</p>
         </div>
@@ -100,4 +131,3 @@ l<!DOCTYPE html>
 </body>
 
 </html>
-
