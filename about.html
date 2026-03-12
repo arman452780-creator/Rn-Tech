@@ -1,10 +1,11 @@
+l
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | RN-TECH Premium Coaching</title>
+    <title>RN-TECH</title>
     <meta name="description" content="Unlock your full potential with strategic life and career coaching.">
 
     <!-- Google Fonts -->
@@ -16,7 +17,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="about.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body class="dark-theme">
@@ -24,14 +25,15 @@
     <!-- Navigation -->
     <header class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">RN-TECH<span class="accent">.</span></a>
+            <a href="index.html" class="logo">RN-TECH<span class="accent">.</span>
+            </a>
 
             <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
                 <span class="hamburger"></span>
             </button>
 
             <nav class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html" class="nav-link active">Home</a>
                 <a href="about.html" class="nav-link">About</a>
                 <a href="courses.html" class="nav-link">Courses</a>
                 <a href="faculties.html" class="nav-link">Faculties</a>
@@ -39,44 +41,90 @@
         </div>
     </header>
 
-    <main style="padding-top: 100px;">
-        <!-- About Section -->
-        <section class="about section" id="about">
-            <div class="container about-container">
-                <div class="about-image-wrapper reveal-slide-right">
-                    <!-- Placeholder visual: A sleek abstract shape or gradient block -->
-                    <div class="about-image-placeholder">
-                        <div class="placeholder-glow"></div>
-                        <span>[Coach Image]</span>
+    <main>
+        <!-- Image Slider Section -->
+        <div class="imgbox">
+            <section class="image-slider">
+                <div class="slider-container">
+                    <div class="slide active">
+                        <img src="slider_custom_1.jpeg" alt="Students in Lab Room" width="100%">
+                    </div>
+                    <div class="slide">
+                        <img src="slider_custom_2.jpeg" alt="Students with Certificates">
+                    </div>
+                    <div class="slide">
+                        <img src="IMG-20260312-WA0001.jpg" alt="Students at Computers">
+                    </div>
+                     <div class="slide">
+                        <img src="IMG-20260312-WA0000.jpg" alt="Students with Certificates">
+                    </div>
+
+                    <!-- Navigation Arrows -->
+                    <button class="slider-btn prev-btn" aria-label="Previous slide">&#10094;</button>
+                    <button class="slider-btn next-btn" aria-label="Next slide">&#10095;</button>
+
+                    <!-- Dots Pagination -->
+                    <div class="slider-dots">
+                        <span class="dot active" data-slide="0"></span>
+                        <span class="dot" data-slide="1"></span>
+                        <span class="dot" data-slide="2"></span>
                     </div>
                 </div>
-                <div class="about-content reveal-slide-left">
-                    <div class="section-header">
-                        <span class="subtitle">Meet Your Coach</span>
-                        <h2 class="section-title">Guiding you to your next breakthrough.</h2>
+
+            </section>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-bg-glow"></div>
+            <div class="container hero-container">
+                <div class="hero-content reveal-fade-up">
+                    <span class="subtitle"></span>
+                    <h1 class="hero-title">Master Your <span class="accent-italic">Potential</span></h1>
+                    <p class="hero-desc">Strategic guidance to help you navigate transitions, RN-TECH your career, and
+                        design a life of profound purpose.</p>
+                    <div class="hero-actions">
+                        <a href="courses.html" class="btn btn-outline lg">Explore Courses</a>
                     </div>
-                    <p>With over a decade of experience in leadership development and personal transformation, I help
-                        high-achievers break through perceived limitations.</p>
-                    <p>My approach combines neuroscience-backed strategies with deep, intuitive listening. We don't just
-                        set goals; we rewire the habits and beliefs that shape your reality.</p>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <span class="stat-num">500+</span>
-                            <span class="stat-label">Clients Coached</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-num">10+</span>
-                            <span class="stat-label">Years Experience</span>
+                </div>
+
+                <!-- Notice Column -->
+
+                <div class="notice-column-wrapper reveal-slide-left">
+                    <div class="notice-header">
+                        <h2>Notice</h2>
+                    </div>
+                    <div class="notice-body">
+                        <div class="notice-scroller">
+                            <div class="notice-item">
+                                <p>Admission is Going on </p>
+                                <span class="badge-new">new</span>
+                            </div>
+                            <div class="notice-item">
+                                <p>Spoken English is Going on </p>
+                                <span class="badge-new">new</span>
+                            </div>
+                            <div class="notice-item">
+                                <p>N/A</p>
+                            </div>
+                            <div class="notice-item">
+                                <p>N/A</p>
+                                <span class="badge-new"></span>
+                            </div>
+
+                            <!-- Duplicate items for seamless scrolling if needed -->
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-       <div class="footer-bottom container">
+
+        <div class="footer-bottom container">
             <p>&copy; 2026 Devlop by Armaan. All rights reserved.</p>
         </div>
     </footer>
