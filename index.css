@@ -15,7 +15,8 @@
 .slide {
     display: none;
     width: 100%;
-    height: 100%; /* Add 100% height to the slide container */
+    height: 100%;
+    /* Add 100% height to the slide container */
 }
 
 .slide.active {
@@ -25,14 +26,20 @@
 
 .slide img {
     width: 100%;
-    height: 100%; /* Set image height to 100% to fill container */
+    height: 100%;
+    /* Set image height to 100% to fill container */
     object-fit: cover;
     display: block;
 }
 
 @keyframes fade {
-    from {opacity: .4} 
-    to {opacity: 1}
+    from {
+        opacity: .4
+    }
+
+    to {
+        opacity: 1
+    }
 }
 
 /* Slider Buttons */
@@ -49,7 +56,7 @@
     transition: 0.6s ease;
     border-radius: 0 3px 3px 0;
     user-select: none;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0, 0, 0, 0.3);
     border: none;
     z-index: 2;
 }
@@ -60,7 +67,7 @@
 }
 
 .slider-btn:hover {
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* Dots Pagination */
@@ -83,17 +90,19 @@
     transition: background-color 0.6s ease;
 }
 
-.dot.active, .dot:hover {
+.dot.active,
+.dot:hover {
     background-color: #717171;
 }
 
 /* --- Hero Section --- */
 .hero {
-    min-height: 100vh;
+    min-height: auto;
     display: flex;
     align-items: center;
     position: relative;
-    padding-top: 80px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     /* Offset for nav */
 }
 
@@ -162,14 +171,14 @@
     padding: 1rem;
     color: var(--color-accent);
     text-align: center;
-     
+
 }
 
 .notice-header h2 {
     font-size: 1.25rem;
     margin: 0;
     font-weight: 600;
-     
+
 }
 
 .notice-body {
@@ -270,10 +279,212 @@
         height: 400px;
     }
 }
-.imgbox{
-   
+
+.imgbox {
+
     margin-top: 180px;
-    
+
     height: 600px;
 
+}
+
+/* --- Partners Section --- */
+.partners-section {
+    background: rgba(255, 255, 255, 0.05);
+    /* Glassy background */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 4rem 2rem;
+    margin: 2rem;
+    /* Give it some breathing room from edges */
+    text-align: center;
+}
+
+.partners-title {
+    color: #ffffff;
+    font-size: 2.2rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+    text-transform: uppercase;
+}
+
+.partners-title .accent-color {
+    color: #ffcc00;
+    /* Yellow for 'PARTNERS' */
+}
+
+.partners-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.8rem auto 3rem auto;
+}
+
+.partners-separator::before,
+.partners-separator::after {
+    content: "";
+    height: 1px;
+    width: 30px;
+    background-color: #f39c12;
+    /* Orange-ish line */
+}
+
+.partners-separator span {
+    display: inline-block;
+    width: 25px;
+    height: 5px;
+    background-color: #f39c12;
+    /* Orange-ish center block */
+    border-radius: 4px;
+    margin: 0 3px;
+}
+
+.partners-slider {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* Optional fade edges for effect */
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.partners-track {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    width: max-content;
+    /* To scroll Left to Right we start translated left and go to 0 */
+    transform: translateX(calc(-50% - 1rem));
+    animation: scrollLogos 20s linear infinite;
+}
+
+.partners-track:hover {
+    animation-play-state: paused;
+}
+
+.partners-track img {
+    height: 130px;
+    width: auto;
+    object-fit: contain;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+@keyframes scrollLogos {
+    0% {
+        transform: translateX(calc(-50% - 1rem));
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* --- Information Banner --- */
+.info-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2.5rem 2rem;
+    margin: 2rem;
+}
+
+.glassy-banner {
+    background: rgba(255, 255, 255, 0.05);
+    /* matches #Partner */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.banner-contact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    color: var(--color-text);
+    font-size: 0.95rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contact-item i {
+    color: var(--color-accent);
+}
+
+.banner-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.banner-links a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.banner-links a:hover {
+    color: var(--color-accent);
+}
+
+.banner-socials {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+}
+
+@media (max-width: 768px) {
+
+    .banner-contact,
+    .banner-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+.contact-item .fa-phone-alt {
+    transform: rotate(180deg);
+    display: inline-block;
 }
