@@ -184,7 +184,7 @@ p {
     left: 0;
     width: 100%;
     z-index: 1000;
-   
+
 
 
 
@@ -228,7 +228,8 @@ p {
     align-items: stretch;
     flex-basis: 100%;
     background-color: transparent;
-    padding-left: 50px; /* Align with logo's margin-left */
+    padding-left: 50px;
+    /* Align with logo's margin-left */
 }
 
 .nav-link {
@@ -237,7 +238,8 @@ p {
     padding: 1rem 1.5rem;
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid transparent; /* Prevents layout shift on hover */
+    border: 1px solid transparent;
+    /* Prevents layout shift on hover */
 }
 
 .nav-link:hover {
@@ -245,7 +247,8 @@ p {
     border-color: rgba(70, 227, 13, 0.2);
     box-shadow: 0 8px 30px rgba(70, 227, 13, 0.9);
     transform: translateY(-2px);
-    border-radius: 10px; /* Added slight rounding to match the cards */
+    border-radius: 10px;
+    /* Added slight rounding to match the cards */
 }
 
 .mobile-toggle {
@@ -459,6 +462,39 @@ p {
         background-position: 300%;
 
     }
+}
 
+/* --- Top Notice Bar --- */
+.top-notice-bar {
+    background: rgba(255, 0, 0, 0.15); /* Glassy red */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+    color: #ffffff;
+    text-align: center;
+    padding: 8px 15px;
+    font-weight: 700;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    width: 100%;
+    z-index: 1002;
+    position: relative;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Enhance readability on glass */
+}
 
+.top-notice-bar span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scrollNotice 20s linear infinite;
+}
+
+@keyframes scrollNotice {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(-100%, 0);
+    }
 }
