@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration | RN-TECH</title>
+    <meta name="description" content="">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="register.css">
+</head>
+
+<body class="dark-theme">
+
+    <!-- Navigation -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">RN-TECH<span class="accent">.</span></a>
+
+            <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span class="hamburger"></span>
+            </button>
+
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="courses.html" class="nav-link">Courses</a>
+                <a href="faculties.html" class="nav-link">Faculties</a>
+            </nav>
+        </div>
+    </header>
+
+    <main style="padding-top: 100px;">
+        <section class="apply-section section bg-darker" id="register">
+            <div class="container apply-container">
+                <div class="apply-form-wrapper reveal-fade-up">
+                    <div class="section-header text-center">
+                        <span class="subtitle">Enroll Now</span>
+                        <h2 class="section-title">Register for Course</h2>
+                    </div>
+
+                    <form id="courseRegisterForm" action="" method="post" enctype="multipart/form-data"
+                        class="contact-form">
+                        <div class="row" style="display: flex; flex-wrap: wrap; margin: -10px;">
+                            <div class="col-md-12" style="width: 100%; padding: 10px;">
+                                <input type="hidden" name="edit" value="" readonly="">
+                                <strong style="color:var(--color-accent); font-size: 1.2rem;">1. PERSONAL
+                                    DETAILS</strong>
+                                <hr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin: 10px 0 20px 0;">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>ADMISSION YEAR <span class="err" style="color:red">*</span></label>
+                                <input name="username" type="hidden" id="username" value="4596">
+                                <input name="branch" type="hidden" id="branch" value="5">
+                                <select name="asession" required class="form-control">
+                                    <option value="">Select year</option>
+                                    <option value="2023">2023-2024</option>
+                                    <option value="2024">2024-2025</option>
+                                    <option value="2025">2025-2026</option>
+                                    <option value="2026">2026-2027</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Student Name <span class="err" style="color:red">*</span></label>
+                                <input name="name" type="text" id="name" required class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Father's Name <span class="err" style="color:red">*</span></label>
+                                <input name="father" type="text" id="father" required class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Mother's Name</label>
+                                <input name="mother" type="text" id="mother" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Gender <span class="err" style="color:red">*</span></label>
+                                <select name="gender" required class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Date Of Birth <span class="err" style="color:red">*</span></label>
+                                <input name="dob" type="date" required class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>PAN No</label>
+                                <input name="pan" type="text" maxlength="15" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Category</label>
+                                <select name="category" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="SC">SC</option>
+                                    <option value="ST">ST</option>
+                                    <option value="GEN">GEN</option>
+                                    <option value="OBC">OBC</option>
+                                    <option value="BC1">BC1</option>
+                                    <option value="BC2">BC2</option>
+                                    <option value="EBC">EBC</option>
+                                    <option value="EWS">EWS</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Mobile No <span class="err" style="color:red">*</span></label>
+                                <input name="contact" type="text" required maxlength="10" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>WhatsApp No</label>
+                                <input name="whatsappcontact" type="text" maxlength="10" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Parent's Contact</label>
+                                <input name="fcontact" type="text" maxlength="10" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Select Your Religion</label>
+                                <select name="religion" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="Hinduism">Hinduism</option>
+                                    <option value="Islam">Islam</option>
+                                    <option value="Christian">Christian</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Marital Status</label>
+                                <select name="marital" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Unmarried">Unmarried</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Choose Your Identity Type</label>
+                                <select name="identity_type" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="Adhar Card">Adhar Card</option>
+                                    <option value="Voter ID">Voter ID</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Id Number <span class="err" style="color:red">*</span></label>
+                                <input name="idnumber" type="text" id="idnumber" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Last General Qualification</label>
+                                <select name="qui" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="8th">8th</option>
+                                    <option value="10th">10th</option>
+                                    <option value="12th">12th</option>
+                                    <option value="Graduation">Graduation</option>
+                                    <option value="Post Graduation">Post Graduation</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>State <span class="err" style="color:red">*</span></label>
+                                <select name="state" class="form-control" required>
+                                    <option value="">Select</option>
+                                    <option value="5">Bihar</option>
+                                    <option value="35">Uttar Pradesh</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>District</label>
+                                <select name="district" class="form-control">
+                                    <option value="">--Select--</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Address</label>
+                                <textarea name="address" class="form-control" rows="1"></textarea>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Pincode <span class="err" style="color:red">*</span></label>
+                                <input name="pincode" type="text" id="pincode" required class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Email Id</label>
+                                <input name="email" type="email" id="email" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Photo</label>
+                                <div style="display:flex; align-items: center; gap: 10px;">
+                                    <input name="uploaded_file" type="file" class="form-control"
+                                        id="uploaded_file_small" style="padding: 5px;">
+                                </div>
+                                <span style="color:var(--color-text-muted); font-size:0.8rem;">Photo must be in
+                                    .jpg/.jpeg/.bmp and size less than 500KB</span>
+                            </div>
+
+                            <div class="col-md-12" style="width: 100%; padding: 10px;">
+                                <strong style="color:var(--color-accent); font-size: 1.2rem;">2. COURSE DETAILS</strong>
+                                <hr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin: 10px 0 20px 0;">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Course Category <span class="err" style="color:red">*</span></label>
+                                <select required name="program" class="form-control">
+                                    <option value="">-- COURSE CATEGORY --</option>
+                                    <option value="3">Basic Course</option>
+                                    <option value="4">Certificate Course</option>
+                                    <option value="5">Diploma Course</option>
+                                    <option value="6">Language Course</option>
+                                    <option value="7">Professional Course</option>
+                                    <option value="8">Typing Course</option>
+                                    <option value="9">Training Course</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Course <span class="err" style="color:red">*</span></label>
+                                <input type="text" id="registerCourse" name="courses" class="form-control" readonly>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Batch <span class="err" style="color:red">*</span></label>
+                                <select name="batch" class="form-control" required>
+                                    <option value="">-- Section --</option>
+                                    <option value="17">MWF 07:00 AM TO 08:00 AM</option>
+                                    <option value="18">TTS 07:00 AM TO 08:00 AM</option>
+                                    <option value="33">MWF 08:00 AM TO 09:00 AM</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>NET FEE</label>
+                                <input type="number" name="fee" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Nationality</label>
+                                <select name="nationality" class="form-control" required>
+                                    <option value="">Select</option>
+                                    <option value="Indian">Indian</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>DISCOUNT</label>
+                                <input type="text" name="discount" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Other Charge</label>
+                                <input type="text" name="other" class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label>Date of Admission <span class="err" style="color:red">*</span></label>
+                                <input name="doj" type="date" id="doj" required class="form-control">
+                            </div>
+
+                            <div class="form-group" style="width: 33.33%; padding: 10px;">
+                                <label style="color:var(--color-accent);">Enquiry Source</label>
+                                <select name="enquiry_source" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="Banner">Banner</option>
+                                    <option value="Liflet">Liflet</option>
+                                    <option value="Poster">Poster</option>
+                                    <option value="News_Paper">News Paper</option>
+                                    <option value="SMS">SMS</option>
+                                    <option value="Counseling_Centre">Counseling Centre</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="width: 50%; padding: 10px; margin-top: 15px;">
+                                <button type="submit" class="btn btn-primary w-100"
+                                    style="background-color: #006600; color: #FFF; border: none;">Submit</button>
+                            </div>
+
+                            <div class="form-group" style="width: 50%; padding: 10px; margin-top: 15px;">
+                                <a href="courses.html" class="btn w-100"
+                                    style="background-color: #FF0000; color: #FFF; border: none; text-align: center;">Exit</a>
+                            </div>
+
+                            <div class="col-md-12"
+                                style="width: 100%; padding: 10px; text-align: center; color: var(--color-text-muted); font-size: 0.85rem;">
+                                <hr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin: 10px 0;">
+                                <span class="err" style="color:red">*</span> denotes required field &nbsp;&nbsp;
+                                <img src="images/cross.png" width="12" height="12" alt="x"
+                                    style="display:inline-block; filter: invert(1);"> denotes Form No. already Exist
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+
+        </div>
+        <div class="footer-bottom container">
+            <p>&copy; 2026 Devlop by Armaan. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+
+</html>
