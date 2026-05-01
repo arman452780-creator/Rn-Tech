@@ -28,8 +28,8 @@
     width: 100%;
     height: 100%;
     /* Set image height to 100% to fill container */
-    object-fit: cover;
-    object-position: top center;
+    object-fit: contain;
+    object-position: center;
     display: block;
 }
 
@@ -317,10 +317,10 @@
     margin: 280px auto 0 auto;
     width: 90%;
     max-width: 1200px;
-    height: 600px;
+    height: 550px;
     border-radius: 16px;
     overflow: hidden;
-    background-color: #050505; /* Matches theme background */
+    background: linear-gradient(135px, #050505 0%, #0a1128 50%, #050505 100%);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
