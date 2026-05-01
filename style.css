@@ -531,10 +531,6 @@ p {
     animation: scrollNotice 20s linear infinite;
 }
 
-.top-notice-bar:hover span {
-    animation-play-state: paused;
-}
-
 @keyframes scrollNotice {
     0% {
         transform: translate(0, 0);
