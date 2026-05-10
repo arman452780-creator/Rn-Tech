@@ -104,3 +104,39 @@
     box-shadow: 0 6px 25px rgba(224, 184, 90, 0.6);
     transform: translateY(-2px);
 }
+
+/* Responsive Grid for Registration */
+.registration-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 0;
+}
+
+.col-full {
+    grid-column: 1 / -1;
+}
+
+.col-half {
+    grid-column: span 1.5; /* Default for 3-col grid is not ideal, better to use grid-column: span 2/3? */
+}
+
+@media (max-width: 992px) {
+    .registration-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .registration-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .apply-form-wrapper {
+        padding: 1.5rem 1rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+}
