@@ -8,12 +8,33 @@
 .testimonial-card {
     padding: 2.5rem;
     position: relative;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    transition: var(--transition-smooth);
+    overflow: hidden;
+}
+
+.testimonial-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 50% -20%, rgba(0, 242, 255, 0.1) 0%, transparent 70%);
+    opacity: 0.5;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: var(--color-primary);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 242, 255, 0.15);
 }
 
 .quote-icon {
     font-family: var(--font-serif);
     font-size: 5rem;
-    color: rgba(212, 175, 55, 0.1);
+    color: rgba(0, 242, 255, 0.1);
     position: absolute;
     top: 0;
     left: 1rem;

@@ -106,7 +106,11 @@
 
         <!-- Hero Section -->
         <section class="hero" id="home">
-            <div class="hero-bg-glow"></div>
+            <div class="hero-particles">
+                <div class="particle p1"></div>
+                <div class="particle p2"></div>
+                <div class="particle p3"></div>
+            </div>
             <div class="container hero-container">
                 <div class="hero-content reveal-fade-up" style="text-align: center; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
                     <span class="subtitle"></span>
@@ -120,88 +124,77 @@
         </section>
         
         <!-- STUDNET REGISTERED -->
-        <section class="hero" id="notices" style="padding-top: 0;">
+        <section class="notices-section section" id="notices">
             <div class="hero-bg-glow"></div>
-            <div class="container hero-container">
-                <div class="notice-column-wrapper reveal-fade-up">
-                    <div class="notice-header">
-                        <h2>Student Registered</h2>
-                    </div>
-                    <div class="notice-body">
-                        <div class="notice-scroller">
-                            <div class="notice-item student-item">
-                                <img src="https://ui-avatars.com/api/?name=Sneha+Singh&background=e0b85a&color=000" alt="Rahul Kumar" class="student-photo">
+            <div class="container">
+                <div class="section-header text-center reveal-fade-up">
+                    <span class="subtitle">Stay Updated</span>
+                    <h2 class="section-title">LATEST <span class="accent-color">UPDATES</span></h2>
+                </div>
+                
+                <div class="notices-grid">
+                    <!-- Column 1: Students -->
+                    <div class="notice-card-column reveal-fade-up">
+                        <div class="column-header">
+                            <i class="fas fa-user-graduate"></i>
+                            <h3>Recent Admissions</h3>
+                        </div>
+                        <div class="column-body">
+                            <div class="notice-item student-item shimmer-glass">
+                                <img src="https://ui-avatars.com/api/?name=Sneha+Singh&background=e0b85a&color=000" alt="Student" class="student-photo">
                                 <div class="student-details">
                                     <p class="student-info">Name : N/A</p>
                                     <p class="student-info">Course : N/A</p>
-                                   
                                 </div>
-                                <span class="badge-new"></span>
+                                <span class="badge-new">NEW</span>
                             </div>
-                            <div class="notice-item student-item">
-                                <img src="https://ui-avatars.com/api/?name=Sneha+Singh&background=e0b85a&color=000" alt="Sneha Singh" class="student-photo">
+                            <div class="notice-item student-item shimmer-glass">
+                                <img src="https://ui-avatars.com/api/?name=Sneha+Singh&background=e0b85a&color=000" alt="Student" class="student-photo">
                                 <div class="student-details">
                                     <p class="student-info">Name : N/A</p>
                                     <p class="student-info">Course : N/A</p>
-                                    
                                 </div>
-                                <span class="badge-new"></span>
-                            </div>
-                            <div class="notice-item student-item">
-                                <img src="https://ui-avatars.com/api/?name=Amit+Sharma&background=e0b85a&color=000" alt="Amit Sharma" class="student-photo">
-                                <div class="student-details">
-                                    <p class="student-info">Name : N/A</p>
-                                    <p class="student-info">Course : N/A</p>
-                                   
-                                </div>
-                                <span class="badge-new"></span>
-                            </div>
-                            <div class="notice-item student-item">
-                                <img src="https://ui-avatars.com/api/?name=Priya+Patel&background=e0b85a&color=000" alt="Priya Patel" class="student-photo">
-                                <div class="student-details">
-                                    <p class="student-info">Name : N/A</p>
-                                    <p class="student-info">Course : N/A</p>
-                                   
-                                </div>
-                                <span class="badge-new"></span>
+                                <span class="badge-new">NEW</span>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Notice Column -->
-
-                <div class="notice-column-wrapper reveal-slide-left">
-                    <div class="notice-header">
-                        <h2>Notice</h2>
-                    </div>
-                    <div class="notice-body">
-                        <div class="notice-scroller">
-                            <div class="notice-item">
+                    <!-- Column 2: Notices -->
+                    <div class="notice-card-column reveal-fade-up" style="animation-delay: 0.2s;">
+                        <div class="column-header">
+                            <i class="fas fa-bullhorn"></i>
+                            <h3>Important Notices</h3>
+                        </div>
+                        <div class="column-body">
+                            <div class="notice-item shimmer-glass">
                                 <p>Admissions are now open at our institute for Computer Classes and English Speaking Classes.</p>
-                                <span class="badge-new">new</span>
+                                <span class="badge-new">NEW</span>
                             </div>
-                            <div class="notice-item">
-                                <p>A new batch for English Speaking Classes has started at our institute.
-                                    Join now to improve your spoken English, 
-                                    grammar, and communication skills.
-                                Limited seats available – Enroll today!</p>
-                                <span class="badge-new">new</span>
+                            <div class="notice-item shimmer-glass">
+                                <p>A new batch for English Speaking Classes has started at our institute. Join now to improve your skills!</p>
+                                <span class="badge-new">NEW</span>
                             </div>
-                            <div class="notice-item">
-                                <p>N/A</p>
-                                 <span class="badge-new">new</span>
-                            </div>
-                            <div class="notice-item">
-                                <p>N/A</p>
-                                <span class="badge-new"></span>
-                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Duplicate items for seamless scrolling if needed -->
+                    <!-- Column 3: Upcoming -->
+                    <div class="notice-card-column reveal-fade-up" style="animation-delay: 0.4s;">
+                        <div class="column-header">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h3>Upcoming Batches</h3>
+                        </div>
+                        <div class="column-body">
+                            <div class="notice-item shimmer-glass">
+                                <p>N/A</p>
+                                <span class="badge-new">SOON</span>
+                            </div>
+                            <div class="notice-item shimmer-glass">
+                                <p>N/A</p>
+                                <span class="badge-new">SOON</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
     </main>
