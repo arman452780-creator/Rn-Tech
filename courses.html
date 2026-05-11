@@ -16,6 +16,9 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet">
 
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="courses.css">
@@ -768,6 +771,10 @@
                                 <a href="apply.html?course=CERTIFICATE%20IN%20ENGLISH" class="btn btn-apply">Apply</a>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Dynamic Courses from Supabase -->
+                    <div id="dynamic-courses-container"></div>
                 </div>
             </div>
         </section>
@@ -781,6 +788,7 @@
 
     <!-- Custom JS -->
     <script src="script.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

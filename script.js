@@ -261,42 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const applyForm = document.getElementById('courseApplyForm');
         if (applyForm) {
-            applyForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const submitBtn = applyForm.querySelector('button[type="submit"]');
-                
-                submitBtn.textContent = 'Submitting...';
-                submitBtn.disabled = true;
-
-                const formData = new FormData(applyForm);
-                const googleAppUrl = 'https://script.google.com/macros/s/AKfycbxiROVhLz7ClfnQAXyOVk92uo2AT1UvcYc2WtpHrvmmMo2r2KU6cWkQjhXJWUtWcnHA1w/exec';
-
-                fetch(googleAppUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (response.ok) {
-                        applyForm.innerHTML = 
-                            '<div style="text-align: center; padding: 1rem 0;">' + 
-                                '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" style="margin-bottom: 1rem;">' + 
-                                    '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>' + 
-                                    '<polyline points="22 4 12 14.01 9 11.01"></polyline>' + 
-                                '</svg>' + 
-                                '<h3 style="color: var(--color-text); margin-bottom: 0.5rem; font-size: 1.5rem;">Application Sent</h3>' + 
-                                '<p style="color: var(--color-text-muted);">Thank you! We received your application and will contact you shortly.</p>' + 
-                                '<a href="courses.html" class="btn btn-outline" style="margin-top: 2rem;">Back to Courses</a>' + 
-                            '</div>';
-                    } else {
-                        throw new Error('Network response was not ok.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error submitting form:', error);
-                    submitBtn.textContent = 'Error. Try Again.';
-                    submitBtn.disabled = false;
-                });
-            });
+            // Logic moved to js/main.js for Supabase integration
         }
     }
 
@@ -314,43 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const registerForm = document.getElementById('courseRegisterForm');
         if (registerForm) {
-            registerForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const submitBtn = registerForm.querySelector('button[type="submit"]');
-                
-                submitBtn.textContent = 'Submitting...';
-                submitBtn.disabled = true;
-
-                // You can change this Google Apps Script URL later if you want registrations to go to a different sheet
-                const formData = new FormData(registerForm);
-                const googleAppUrl = 'https://script.google.com/macros/s/AKfycbxiROVhLz7ClfnQAXyOVk92uo2AT1UvcYc2WtpHrvmmMo2r2KU6cWkQjhXJWUtWcnHA1w/exec';
-
-                fetch(googleAppUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (response.ok) {
-                        registerForm.innerHTML = 
-                            '<div style="text-align: center; padding: 1rem 0;">' + 
-                                '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" style="margin-bottom: 1rem;">' + 
-                                    '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>' + 
-                                    '<polyline points="22 4 12 14.01 9 11.01"></polyline>' + 
-                                '</svg>' + 
-                                '<h3 style="color: var(--color-text); margin-bottom: 0.5rem; font-size: 1.5rem;">Registration Sent</h3>' + 
-                                '<p style="color: var(--color-text-muted);">Thank you! We received your registration and will contact you shortly.</p>' + 
-                                '<a href="courses.html" class="btn btn-outline" style="margin-top: 2rem;">Back to Courses</a>' + 
-                            '</div>';
-                    } else {
-                        throw new Error('Network response was not ok.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error submitting form:', error);
-                    submitBtn.textContent = 'Error. Try Again.';
-                    submitBtn.disabled = false;
-                });
-            });
+            // Logic moved to js/main.js for Supabase integration
         }
     }
 

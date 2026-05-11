@@ -7,16 +7,18 @@
     <title>RN-TECH</title>
     <link rel="icon" href="Favicon.jpg" type="image/jpeg">
     <link rel="apple-touch-icon" href="Favicon.jpg">
-    
+
     <!-- Meta Tags for Search Engines & Social Media -->
     <meta property="og:title" content="RN-TECH - Computer Educational Organization">
-    <meta property="og:description" content="An ISO 9001:2015 Certified India's No.1 Computer Educational Organization in Raiyam, Madhubani.">
+    <meta property="og:description"
+        content="An ISO 9001:2015 Certified India's No.1 Computer Educational Organization in Raiyam, Madhubani.">
     <meta property="og:image" content="Favicon.jpg">
     <meta property="og:url" content="https://rntechraiyam.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="Favicon.jpg">
-    
-    <meta name="description" content="An ISO 9001:2015 Certified India's No.1 Computer Educational Organization in Raiyam, Madhubani.">
+
+    <meta name="description"
+        content="An ISO 9001:2015 Certified India's No.1 Computer Educational Organization in Raiyam, Madhubani.">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,6 +29,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="index.css">
@@ -38,7 +43,7 @@
     <header class="navbar" id="navbar">
         <div class="top-notice-bar">
             <span>An ISO 9001 : 2015 Certified India’s No.1 Computer Educational Organization </span>
-           
+
         </div>
         <div class="nav-container">
             <a href="index.html" class="logo">
@@ -57,7 +62,8 @@
                 <a href="about.html" class="nav-link">About</a>
                 <a href="courses.html" class="nav-link">Courses</a>
                 <a href="faculties.html" class="nav-link">Faculties</a>
-                <a href="https://attendance-app-22f96.web.app/index.html" class="nav-link" target="_blank" rel="noopener noreferrer">Attendance</a>
+                <a href="https://attendance-app-22f96.web.app/index.html" class="nav-link" target="_blank"
+                    rel="noopener noreferrer">Attendance</a>
             </nav>
         </div>
     </header>
@@ -112,17 +118,19 @@
                 <div class="particle p3"></div>
             </div>
             <div class="container hero-container">
-                <div class="hero-content reveal-fade-up" style="text-align: center; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
+                <div class="hero-content reveal-fade-up"
+                    style="text-align: center; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
                     <span class="subtitle"></span>
                     <h1 class="hero-title">Learn Today <span class="accent-italic">Lead Tomorrow</span></h1>
-                    <p class="hero-desc">Practical computer training at RN-TECH designed to help students develop real-world digital skills and succeed in the modern tech industry.</p>
+                    <p class="hero-desc">Practical computer training at RN-TECH designed to help students develop
+                        real-world digital skills and succeed in the modern tech industry.</p>
                     <div class="hero-actions" style="justify-content: center;">
                         <a href="courses.html" class="btn btn-outline lg">Enroll Now</a>
                     </div>
                 </div>
             </div>
         </section>
-        
+
         <!-- STUDNET REGISTERED -->
         <section class="notices-section section" id="notices">
             <div class="hero-bg-glow"></div>
@@ -131,7 +139,7 @@
                     <span class="subtitle">Stay Updated</span>
                     <h2 class="section-title">LATEST <span class="accent-color">UPDATES</span></h2>
                 </div>
-                
+
                 <div class="notices-grid">
                     <!-- Column 1: Students -->
                     <div class="notice-card-column reveal-fade-up">
@@ -139,9 +147,10 @@
                             <i class="fas fa-user-graduate"></i>
                             <h3>Recent Admissions</h3>
                         </div>
-                        <div class="column-body">
+                        <div class="column-body" id="recent-admissions-container">
                             <div class="notice-item student-item shimmer-glass">
-                                <img src="https://ui-avatars.com/api/?name=Sneha+Singh&background=e0b85a&color=000" alt="Student" class="student-photo">
+                                <img src="https://ui-avatars.com/api/?name=Sneha+Singh&background=e0b85a&color=000"
+                                    alt="Student" class="student-photo">
                                 <div class="student-details">
                                     <p class="student-info">Name : N/A</p>
                                     <p class="student-info">Course : N/A</p>
@@ -149,7 +158,8 @@
                                 <span class="badge-new">NEW</span>
                             </div>
                             <div class="notice-item student-item shimmer-glass">
-                                <img src="https://ui-avatars.com/api/?name=Sneha+Singh&background=e0b85a&color=000" alt="Student" class="student-photo">
+                                <img src="https://ui-avatars.com/api/?name=Sneha+Singh&background=e0b85a&color=000"
+                                    alt="Student" class="student-photo">
                                 <div class="student-details">
                                     <p class="student-info">Name : N/A</p>
                                     <p class="student-info">Course : N/A</p>
@@ -165,13 +175,15 @@
                             <i class="fas fa-bullhorn"></i>
                             <h3>Important Notices</h3>
                         </div>
-                        <div class="column-body">
+                        <div class="column-body" id="notices-container">
                             <div class="notice-item shimmer-glass">
-                                <p>Admissions are now open at our institute for Computer Classes and English Speaking Classes.</p>
+                                <p>Admissions are now open at our institute for Computer Classes and English Speaking
+                                    Classes.</p>
                                 <span class="badge-new">NEW</span>
                             </div>
                             <div class="notice-item shimmer-glass">
-                                <p>A new batch for English Speaking Classes has started at our institute. Join now to improve your skills!</p>
+                                <p>A new batch for English Speaking Classes has started at our institute. Join now to
+                                    improve your skills!</p>
                                 <span class="badge-new">NEW</span>
                             </div>
                         </div>
@@ -183,7 +195,7 @@
                             <i class="fas fa-calendar-alt"></i>
                             <h3>Upcoming Batches</h3>
                         </div>
-                        <div class="column-body">
+                        <div class="column-body" id="upcoming-batches-container">
                             <div class="notice-item shimmer-glass">
                                 <p>N/A</p>
                                 <span class="badge-new">SOON</span>
@@ -234,9 +246,11 @@
 
         <div class="banner-socials">
 
-            <a href="https://www.facebook.com/share/1CHGxUCkLm/" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.facebook.com/share/1CHGxUCkLm/" class="social-icon" aria-label="Facebook"><i
+                    class="fab fa-facebook-f"></i></a>
             <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com/rn_tech_computer_academy?igsh=b3RuMTQ2Y2tpOG90" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/rn_tech_computer_academy?igsh=b3RuMTQ2Y2tpOG90" class="social-icon"
+                aria-label="Instagram"><i class="fab fa-instagram"></i></a>
 
 
         </div>
@@ -252,6 +266,7 @@
 
     <!-- Custom JS -->
     <script src="script.js"></script>
+    <script type="module" src="js/main.js"></script>
 
 </body>
 
