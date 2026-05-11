@@ -1,5 +1,6 @@
 import { dbService } from './db-service.js';
 import { authService } from './auth-service.js';
+import { getSupabase } from './supabase-client.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('RN-TECH Supabase Integration Initialized');
@@ -193,7 +194,7 @@ function showSuccessMessage(form, title, message) {
     `;
 }
 
-function updateUIForLoggedInUser(user) {
+async function updateUIForLoggedInUser(user) {
     const loginLink = document.getElementById('nav-login-link');
     if (loginLink) {
         loginLink.remove();
@@ -201,11 +202,27 @@ function updateUIForLoggedInUser(user) {
 
     const navLinks = document.querySelector('.nav-links');
     if (navLinks && !document.getElementById('nav-user-profile')) {
+        const supabase = getSupabase();
+        const { data: profile } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+
         const profileLink = document.createElement('a');
-        profileLink.href = '#';
         profileLink.className = 'nav-link';
         profileLink.id = 'nav-user-profile';
-        profileLink.textContent = 'Profile';
+        
+        if (profile && profile.role === 'admin') {
+            profileLink.href = 'admin-dashboard.html';
+            profileLink.textContent = 'Dashboard';
+            profileLink.style.color = 'var(--color-accent)';
+            profileLink.style.fontWeight = 'bold';
+        } else {
+            profileLink.href = '#';
+            profileLink.textContent = 'Profile';
+        }
+        
         navLinks.appendChild(profileLink);
 
         const logoutLink = document.createElement('a');
@@ -232,7 +249,7 @@ function updateUIForLoggedOutUser() {
     const navLinks = document.querySelector('.nav-links');
     if (navLinks && !document.getElementById('nav-login-link')) {
         const loginLink = document.createElement('a');
-        loginLink.href = 'login.html';
+        loginLink.href = 'admin-login.html';
         loginLink.className = 'nav-link';
         loginLink.id = 'nav-login-link';
         loginLink.textContent = 'Login';
