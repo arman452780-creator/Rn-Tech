@@ -137,31 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
 
     // --- Form Submission Simulation ---
-    const contactForm = document.getElementById('contactForm');
+    // --- Contact Form Logic moved to js/main.js ---
 
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const btn = contactForm.querySelector('button[type="submit"]');
-            const originalText = btn.textContent;
-
-            btn.textContent = 'Sending...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                contactForm.innerHTML = 
-                    '<div class="success-message" style="text-align: center; padding: 2rem 0;">' +
-                        '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" style="margin-bottom: 1rem;">' +
-                            '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>' +
-                            '<polyline points="22 4 12 14.01 9 11.01"></polyline>' +
-                        '</svg>' +
-                        '<h3 style="color: var(--color-text); margin-bottom: 0.5rem; font-size: 1.5rem;">Application Sent</h3>' +
-                        '<p style="color: var(--color-text-muted);">Thank you for taking the first step. I will be in touch within 48 hours to schedule your discovery call.</p>' +
-                    '</div>';
-            }, 1500);
-        });
-    }
 
     // --- Custom Select Dropdown logic to support scrolling ---
     const x = document.querySelectorAll(".custom-select-wrapper");

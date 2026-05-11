@@ -31,7 +31,7 @@
 
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="index.css">
@@ -253,6 +253,58 @@
                 aria-label="Instagram"><i class="fab fa-instagram"></i></a>
 
 
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-wrapper">
+                <div class="contact-header reveal-fade-up">
+                    <h2 class="contact-title">Get In <span class="accent-color">Touch</span></h2>
+                    <p class="contact-subtitle">Have questions? We'd love to hear from you. Send us a message and we'll
+                        respond as soon as possible.</p>
+                </div>
+
+                <form id="contactForm" class="contact-form reveal-fade-up">
+                    <div class="form-group">
+                        <label for="contactName">Your Name</label>
+                        <input type="text" id="contactName" name="name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactEmail">Your Email</label>
+                        <input type="email" id="contactEmail" name="email" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" name="message" class="form-control contact-textarea"
+                            placeholder="Your message here..." rows="6" required></textarea>
+                    </div>
+
+                    <div id="contactError" class="error-message" style="display: none;"></div>
+                    <div id="contactSuccess" class="success-message" style="display: none;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" style="margin-right: 0.5rem;">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <span>Message sent successfully! We'll be in touch soon.</span>
+                    </div>
+
+                    <button type="submit" class="contact-btn">
+                        <span class="btn-text">Send Message</span>
+                        <div class="btn-spinner" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10" opacity="0.2"></circle>
+                                <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"
+                                    style="animation: spin 1s linear infinite;"></path>
+                            </svg>
+                        </div>
+                    </button>
+                </form>
+            </div>
         </div>
     </section>
 

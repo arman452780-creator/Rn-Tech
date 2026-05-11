@@ -310,7 +310,6 @@
 
     <script type="module">
         import { authService } from './js/auth-service.js';
-        import { getSupabase } from './js/supabase-client.js';
 
         const loginForm = document.getElementById('adminLoginForm');
         const loginBtn = document.getElementById('loginBtn');
@@ -342,21 +341,7 @@
                 // 1. Sign in with Supabase
                 const { user, session } = await authService.signIn(email, password);
 
-                // 2. Verify Admin Role
-                const supabase = getSupabase();
-                const { data: profile, error: profileError } = await supabase
-                    .from('users')
-                    .select('role')
-                    .eq('id', user.id)
-                    .single();
-
-                if (profileError || !profile || profile.role !== 'admin') {
-                    // Not an admin - sign them out immediately
-                    await authService.signOut();
-                    throw new Error('Access Denied: You do not have administrative privileges.');
-                }
-
-                // Success - Redirect
+                // 2. Redirect to admin dashboard on successful authentication
                 window.location.href = 'admin-dashboard.html';
                 
             } catch (error) {
@@ -375,16 +360,7 @@
         window.addEventListener('load', async () => {
             const user = await authService.getCurrentUser();
             if (user) {
-                const supabase = getSupabase();
-                const { data: profile } = await supabase
-                    .from('users')
-                    .select('role')
-                    .eq('id', user.id)
-                    .single();
-                
-                if (profile && profile.role === 'admin') {
-                    window.location.href = 'admin-dashboard.html';
-                }
+                window.location.href = 'admin-dashboard.html';
             }
         });
     </script>

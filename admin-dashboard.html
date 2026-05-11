@@ -201,6 +201,11 @@
                     <i class="fas fa-images"></i> Gallery
                 </a>
             </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+            </div>
         </nav>
 
         <div class="logout-btn" id="logoutBtn">
@@ -244,7 +249,6 @@
 
     <script type="module">
         import { authService } from './js/auth-service.js';
-        import { getSupabase } from './js/supabase-client.js';
 
         const authOverlay = document.getElementById('authOverlay');
         const adminNameDisplay = document.getElementById('adminName');
@@ -259,21 +263,8 @@
                     return;
                 }
 
-                const supabase = getSupabase();
-                const { data: profile, error } = await supabase
-                    .from('users')
-                    .select('full_name, role')
-                    .eq('id', user.id)
-                    .single();
-
-                if (error || !profile || profile.role !== 'admin') {
-                    console.error('Access Denied');
-                    window.location.href = 'admin-login.html';
-                    return;
-                }
-
-                // Success
-                adminNameDisplay.textContent = profile.full_name || 'Admin';
+                // Success - User is authenticated
+                adminNameDisplay.textContent = user.email || 'Admin';
                 authOverlay.style.display = 'none';
 
             } catch (err) {
@@ -286,8 +277,13 @@
 
         // Logout
         logoutBtn.addEventListener('click', async () => {
-            await authService.signOut();
-            window.location.href = 'index.html';
+            try {
+                await authService.signOut();
+                window.location.href = 'admin-login.html';
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.href = 'admin-login.html';
+            }
         });
     </script>
 </body>

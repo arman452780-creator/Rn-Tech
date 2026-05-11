@@ -168,6 +168,57 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // --- Handle Contact Form ---
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnSpinner = submitBtn.querySelector('.btn-spinner');
+            const errorMsg = document.getElementById('contactError');
+            const successMsg = document.getElementById('contactSuccess');
+
+            // Reset states
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            
+            // Loading state
+            submitBtn.disabled = true;
+            if (btnText) btnText.style.opacity = '0.5';
+            if (btnSpinner) btnSpinner.style.display = 'block';
+
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                await dbService.submitContactMessage({
+                    name: data.name,
+                    email: data.email,
+                    message: data.message
+                });
+
+                // Success state
+                contactForm.reset();
+                successMsg.style.display = 'flex';
+                
+                // Optional: Scroll to success message
+                successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                console.error('Error submitting contact message:', error);
+                errorMsg.textContent = 'Failed to send message. Please try again later.';
+                errorMsg.style.display = 'block';
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                if (btnText) btnText.style.opacity = '1';
+                if (btnSpinner) btnSpinner.style.display = 'none';
+            }
+        });
+    }
+
     // --- Handle Auth State ---
     authService.onAuthStateChange((event, session) => {
         if (session) {
