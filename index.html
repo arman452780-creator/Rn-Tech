@@ -32,6 +32,9 @@
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <!-- Global Theme System -->
+    <link rel="stylesheet" href="global.css">
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="index.css">
@@ -72,7 +75,7 @@
         <!-- Image Slider Section -->
         <div class="imgbox">
             <section class="image-slider">
-                <div class="slider-container">
+                <div class="slider-container" id="hero-slider-container">
                     <div class="slide active">
                         <img src="Adca.jpg" alt="ADCA Course Poster" width="100%">
                     </div>
@@ -97,7 +100,7 @@
                     <button class="slider-btn next-btn" aria-label="Next slide">&#10095;</button>
 
                     <!-- Dots Pagination -->
-                    <div class="slider-dots">
+                    <div class="slider-dots" id="hero-slider-dots">
                         <span class="dot active" data-slide="0"></span>
                         <span class="dot" data-slide="1"></span>
                         <span class="dot" data-slide="2"></span>
@@ -176,15 +179,9 @@
                             <h3>Important Notices</h3>
                         </div>
                         <div class="column-body" id="notices-container">
-                            <div class="notice-item shimmer-glass">
-                                <p>Admissions are now open at our institute for Computer Classes and English Speaking
-                                    Classes.</p>
-                                <span class="badge-new">NEW</span>
-                            </div>
-                            <div class="notice-item shimmer-glass">
-                                <p>A new batch for English Speaking Classes has started at our institute. Join now to
-                                    improve your skills!</p>
-                                <span class="badge-new">NEW</span>
+                            <!-- Dynamic notices will be injected here by main.js -->
+                            <div class="notice-item shimmer-glass skeleton-notice" style="opacity: 0.5;">
+                                <p>Loading latest announcements...</p>
                             </div>
                         </div>
                     </div>
@@ -196,13 +193,8 @@
                             <h3>Upcoming Batches</h3>
                         </div>
                         <div class="column-body" id="upcoming-batches-container">
-                            <div class="notice-item shimmer-glass">
-                                <p>N/A</p>
-                                <span class="badge-new">SOON</span>
-                            </div>
-                            <div class="notice-item shimmer-glass">
-                                <p>N/A</p>
-                                <span class="badge-new">SOON</span>
+                            <div class="notice-item shimmer-glass" style="opacity: 0.5;">
+                                <p>Loading upcoming batches...</p>
                             </div>
                         </div>
                     </div>

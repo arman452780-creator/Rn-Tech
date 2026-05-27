@@ -14,106 +14,14 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Global Theme System -->
+    <link rel="stylesheet" href="global.css">
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-common.css">
     <style>
-        body {
-            background: #05050a;
-            color: #fff;
-            font-family: 'Outfit', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            left: 0;
-            top: 0;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        .nav-item {
-            margin-bottom: 0.5rem;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(0, 242, 255, 0.1);
-            color: #00f2ff;
-        }
-
-        .logout-btn {
-            margin-top: auto;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: #ff4d4d;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: 1px solid transparent;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 77, 77, 0.1);
-            border-color: rgba(255, 77, 77, 0.2);
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 280px;
-            padding: 3rem;
-            width: 100%;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .welcome-section {
-            margin-bottom: 3rem;
-        }
-
-        .welcome-title {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
+        /* Dashboard specific overrides if any */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -160,6 +68,18 @@
             justify-content: center;
             flex-direction: column;
         }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .status-pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.2); }
+        .status-approved { background: rgba(40, 167, 69, 0.1); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.2); }
+        .status-rejected { background: rgba(220, 53, 69, 0.1); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.2); }
     </style>
     
     <!-- Supabase CDN -->
@@ -177,33 +97,38 @@
         
         <nav class="nav-menu">
             <div class="nav-item">
-                <a href="#" class="nav-link active">
-                    <i class="fas fa-home"></i> Dashboard
+                <a href="admin-dashboard.html" class="nav-link active">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-user-graduate"></i> Students
+                <a href="admin-students.html" class="nav-link">
+                    <i class="fas fa-user-graduate"></i> <span>Students</span>
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-book"></i> Courses
+                <a href="admin-courses.html" class="nav-link">
+                    <i class="fas fa-book"></i> <span>Courses</span>
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-bullhorn"></i> Notices
+                <a href="admin-notices.html" class="nav-link">
+                    <i class="fas fa-bullhorn"></i> <span>Notices</span>
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-images"></i> Gallery
+                <a href="admin-batches.html" class="nav-link">
+                    <i class="fas fa-calendar-alt"></i> <span>Upcoming Batches</span>
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-envelope"></i> Messages
+                <a href="admin-gallery.html" class="nav-link">
+                    <i class="fas fa-images"></i> <span>Gallery</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i> <span>Messages</span>
                 </a>
             </div>
         </nav>
@@ -221,38 +146,55 @@
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value">124</div>
+                <div class="stat-value" id="totalStudents"><div class="skeleton stat-skeleton"></div></div>
                 <div class="stat-label">Total Students</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">12</div>
+                <div class="stat-value" id="activeCourses"><div class="skeleton stat-skeleton"></div></div>
                 <div class="stat-label">Active Courses</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">8</div>
+                <div class="stat-value" id="pendingApps"><div class="skeleton stat-skeleton"></div></div>
                 <div class="stat-label">Pending Registrations</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">5</div>
+                <div class="stat-value" id="newMessages"><div class="skeleton stat-skeleton"></div></div>
                 <div class="stat-label">New Messages</div>
             </div>
         </div>
 
         <section class="recent-activity">
-            <h2 style="margin-bottom: 1.5rem;">Recent Applications</h2>
-            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem; text-align: center; color: rgba(255, 255, 255, 0.4);">
-                <i class="fas fa-database" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                Data fetching from Supabase will appear here.
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin: 0;">Recent Applications</h2>
+                <a href="#" style="color: #00f2ff; text-decoration: none; font-size: 0.9rem;">View All</a>
+            </div>
+            <div id="applicationsList">
+                <!-- Skeleton Loading -->
+                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
+                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
+                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
             </div>
         </section>
     </main>
 
     <script type="module">
         import { authService } from './js/auth-service.js';
+        import { dashboardService } from './js/dashboard-service.js';
 
         const authOverlay = document.getElementById('authOverlay');
         const adminNameDisplay = document.getElementById('adminName');
         const logoutBtn = document.getElementById('logoutBtn');
+        
+        // Stats Elements
+        const statsElements = {
+            students: document.getElementById('totalStudents'),
+            courses: document.getElementById('activeCourses'),
+            pending: document.getElementById('pendingApps'),
+            messages: document.getElementById('newMessages')
+        };
+        
+        const applicationsList = document.getElementById('applicationsList');
+        let dashboardSubscription = null;
 
         // Route Protection
         async function checkAuth() {
@@ -264,12 +206,98 @@
                 }
 
                 // Success - User is authenticated
-                adminNameDisplay.textContent = user.email || 'Admin';
+                adminNameDisplay.textContent = user.email.split('@')[0] || 'Admin';
                 authOverlay.style.display = 'none';
+                console.log("Supabase Connected");
+                
+                // Initialize Dashboard
+                initDashboard();
 
             } catch (err) {
                 console.error('Auth verification failed:', err);
                 window.location.href = 'admin-login.html';
+            }
+        }
+
+        async function initDashboard() {
+            loadStats();
+            loadApplications();
+            
+            // Set up realtime updates
+            dashboardSubscription = dashboardService.subscribeToChanges((table, payload) => {
+                console.log(`Realtime update from ${table}:`, payload);
+                loadStats();
+                loadApplications();
+            });
+        }
+
+        async function loadStats() {
+            try {
+                const stats = await dashboardService.getDashboardStats();
+                statsElements.students.textContent = stats.students;
+                statsElements.courses.textContent = stats.courses;
+                statsElements.pending.textContent = stats.pending;
+                statsElements.messages.textContent = stats.messages;
+            } catch (err) {
+                console.error('Failed to load stats:', err);
+                showError('stats');
+            }
+        }
+
+        async function loadApplications() {
+            try {
+                const apps = await dashboardService.getRecentApplications();
+                renderApplications(apps);
+            } catch (err) {
+                console.error('Failed to load applications:', err);
+                showError('applications');
+            }
+        }
+
+        function renderApplications(apps) {
+            if (!apps || apps.length === 0) {
+                applicationsList.innerHTML = `
+                    <div style="padding: 2rem; text-align: center; color: rgba(255,255,255,0.4);">
+                        No recent applications found.
+                    </div>
+                `;
+                return;
+            }
+
+            applicationsList.innerHTML = apps.map(app => `
+                <div class="app-card">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 45px; height: 45px; background: rgba(0, 242, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #00f2ff;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0; font-weight: 500;">${app.full_name || app.name || 'Unknown Student'}</h4>
+                            <p style="margin: 4px 0 0; font-size: 0.85rem; color: rgba(255,255,255,0.5);">
+                                ${app.course_name || app.course || 'N/A'} • ${new Date(app.created_at).toLocaleDateString()}
+                            </p>
+                        </div>
+                    </div>
+                    <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                        <span class="status-badge status-${(app.status || 'pending').toLowerCase()}">${app.status || 'pending'}</span>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">
+                            ${app.phone || app.email || ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showError(type) {
+            const errorHtml = `
+                <div style="color: #ff4d4d; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-exclamation-circle"></i> Error loading ${type}
+                </div>
+            `;
+            
+            if (type === 'stats') {
+                Object.values(statsElements).forEach(el => el.innerHTML = '!');
+            } else {
+                applicationsList.innerHTML = errorHtml;
             }
         }
 
@@ -278,11 +306,17 @@
         // Logout
         logoutBtn.addEventListener('click', async () => {
             try {
+                // Remove realtime subscriptions
+                if (dashboardSubscription && typeof dashboardSubscription.unsubscribe === 'function') {
+                    await dashboardSubscription.unsubscribe();
+                }
+                
                 await authService.signOut();
-                window.location.href = 'admin-login.html';
+                console.log("Redirecting To Admin Login");
+                window.location.replace('admin-login.html');
             } catch (err) {
                 console.error('Logout error:', err);
-                window.location.href = 'admin-login.html';
+                window.location.replace('admin-login.html');
             }
         });
     </script>

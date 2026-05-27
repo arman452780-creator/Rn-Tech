@@ -8,8 +8,11 @@ export const dbService = {
         const { data, error } = await supabase
             .from('notices')
             .select('*')
-            .eq('is_active', true)
-            .order('created_at', { ascending: false });
+            .eq('published', true)
+            .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+            .order('pinned', { ascending: false })
+            .order('created_at', { ascending: false })
+            .limit(10);
         
         if (error) throw error;
         return data;
@@ -54,6 +57,31 @@ export const dbService = {
             .eq('status', 'approved') // Only show approved ones
             .order('created_at', { ascending: false })
             .limit(limit);
+        
+        if (error) throw error;
+        return data;
+    },
+
+    // --- Gallery / Slider ---
+    async getSliderImages() {
+        const { data, error } = await supabase
+            .from('gallery')
+            .select('*')
+            .eq('show_in_slider', true)
+            .order('uploaded_at', { ascending: false });
+        
+        if (error) throw error;
+        return data;
+    },
+
+    // --- Upcoming Batches ---
+    async getUpcomingBatches() {
+        const { data, error } = await supabase
+            .from('upcoming_batches')
+            .select('*')
+            .eq('published', true)
+            .order('featured', { ascending: false })
+            .order('created_at', { ascending: false });
         
         if (error) throw error;
         return data;

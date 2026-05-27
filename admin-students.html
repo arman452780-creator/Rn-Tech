@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students | RN-TECH Admin</title>
+    <link rel="icon" href="Favicon.jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="admin-common.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <a href="index.html" class="logo">RN-TECH<span style="color: #00f2ff;">.</span> Admin</a>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <a href="admin-dashboard.html" class="nav-link">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-students.html" class="nav-link active">
+                    <i class="fas fa-user-graduate"></i> <span>Students</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-courses.html" class="nav-link">
+                    <i class="fas fa-book"></i> <span>Courses</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-notices.html" class="nav-link">
+                    <i class="fas fa-bullhorn"></i> <span>Notices</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-gallery.html" class="nav-link">
+                    <i class="fas fa-images"></i> <span>Gallery</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i> <span>Messages</span>
+                </a>
+            </div>
+        </nav>
+        <div class="logout-btn" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <h1 class="page-title">Students</h1>
+                <p style="color: var(--color-text-dim); margin-top: 0.5rem;">Manage and track student progress.</p>
+            </div>
+            <button class="btn-primary" id="addStudentBtn">
+                <i class="fas fa-plus"></i> Add Student
+            </button>
+        </header>
+
+        <section class="glass-card" style="margin-bottom: 2rem; padding: 1.5rem;">
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px;">
+                    <div class="form-input" style="display: flex; align-items: center; gap: 10px; padding: 10px 16px;">
+                        <i class="fas fa-search" style="color: var(--color-text-dim);"></i>
+                        <input type="text" id="searchInput" placeholder="Search students by name or email..." style="background: none; border: none; color: #fff; width: 100%; outline: none;">
+                    </div>
+                </div>
+                <div style="min-width: 150px;">
+                    <select id="courseFilter" class="form-input">
+                        <option value="">All Courses</option>
+                        <!-- Dynamic Options -->
+                    </select>
+                </div>
+                <div style="min-width: 150px;">
+                    <select id="batchFilter" class="form-input">
+                        <option value="">All Batches</option>
+                        <option value="Morning">Morning</option>
+                        <option value="Afternoon">Afternoon</option>
+                        <option value="Evening">Evening</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card" style="padding: 0; overflow: hidden;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Courses</th>
+                        <th>Attendance</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <!-- Skeleton Rows -->
+                    <tr class="skeleton-row">
+                        <td colspan="5"><div class="skeleton" style="height: 60px; margin: 10px;"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modal: Add/Edit Student -->
+    <div class="modal-overlay" id="studentModal">
+        <div class="modal-content">
+            <button class="modal-close"><i class="fas fa-times"></i></button>
+            <h2 id="modalTitle" style="margin-bottom: 2rem;">Add New Student</h2>
+            <form id="studentForm">
+                <input type="hidden" id="studentId">
+                <div class="input-group">
+                    <label class="input-label">Full Name</label>
+                    <input type="text" id="studentName" class="form-input" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label class="input-label">Email</label>
+                        <input type="email" id="studentEmail" class="form-input" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Phone</label>
+                        <input type="tel" id="studentPhone" class="form-input" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Courses (Select multiple)</label>
+                    <div id="courseCheckboxes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">
+                        <!-- Dynamic Checkboxes -->
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn-primary" style="flex: 1;">Save Student</button>
+                    <button type="button" class="btn-outline modal-close-btn" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        import { authService } from './js/auth-service.js';
+        import { adminService } from './js/admin-service.js';
+        import { getSupabase } from './js/supabase-client.js';
+
+        const tableBody = document.getElementById('studentTableBody');
+        const modal = document.getElementById('studentModal');
+        const studentForm = document.getElementById('studentForm');
+        const searchInput = document.getElementById('searchInput');
+        const courseFilter = document.getElementById('courseFilter');
+        const batchFilter = document.getElementById('batchFilter');
+        const courseCheckboxes = document.getElementById('courseCheckboxes');
+
+        let students = [];
+        let allCourses = [];
+        let realtimeChannel = null;
+
+        // Check Auth
+        async function init() {
+            const user = await authService.getCurrentUser();
+            if (!user) { window.location.href = 'admin-login.html'; return; }
+            
+            await loadInitialData();
+            setupRealtime();
+            console.log("Students Module Loaded");
+        }
+
+        async function loadInitialData() {
+            try {
+                [students, allCourses] = await Promise.all([
+                    adminService.getAllStudents(),
+                    adminService.getAllCourses()
+                ]);
+                
+                renderFilters();
+                renderStudents();
+            } catch (err) {
+                console.error("Load failed:", err);
+            }
+        }
+
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                if (realtimeChannel) {
+                    const supabase = getSupabase();
+                    await supabase.removeChannel(realtimeChannel);
+                    console.log("Realtime Subscriptions Removed");
+                }
+                await authService.signOut();
+                console.log("Redirecting To Admin Login");
+                window.location.replace('admin-login.html');
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.replace('admin-login.html');
+            }
+        });
+
+        function renderFilters() {
+            courseFilter.innerHTML = '<option value="">All Courses</option>' + 
+                allCourses.map(c => `<option value="${c.course_name}">${c.course_name}</option>`).join('');
+            
+            courseCheckboxes.innerHTML = allCourses.map(c => `
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" name="courses" value="${c.course_name}"> ${c.course_name}
+                </label>
+            `).join('');
+        }
+
+        function renderStudents() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCourse = courseFilter.value;
+            const selectedBatch = batchFilter.value;
+
+            const filtered = students.filter(s => {
+                const matchesSearch = s.name.toLowerCase().includes(searchTerm) || s.email.toLowerCase().includes(searchTerm);
+                const matchesCourse = !selectedCourse || (s.courses && s.courses.includes(selectedCourse));
+                const matchesBatch = !selectedBatch || (s.batches && s.batches.includes(selectedBatch));
+                return matchesSearch && matchesCourse && matchesBatch;
+            });
+
+            if (filtered.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 3rem; color: var(--color-text-dim);">No students found matching your criteria.</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = filtered.map(s => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="${s.profile_image || 'https://ui-avatars.com/api/?name='+encodeURIComponent(s.name)}" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--color-accent);">
+                            <div>
+                                <div style="font-weight: 500;">${s.name}</div>
+                                <div style="font-size: 0.8rem; color: var(--color-text-dim);">${s.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                            ${(s.courses || []).map(c => `<span style="font-size: 0.7rem; background: var(--color-accent-dim); color: var(--color-accent); padding: 2px 8px; border-radius: 10px;">${c}</span>`).join('')}
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; max-width: 60px;">
+                                <div style="width: ${s.attendance_percentage || 0}%; height: 100%; background: var(--color-accent); border-radius: 3px; box-shadow: 0 0 10px var(--color-accent);"></div>
+                            </div>
+                            <span style="font-size: 0.8rem;">${s.attendance_percentage || 0}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; background: rgba(40,167,69,0.1); color: #28a745;">Active</span>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="editStudent('${s.id}')" class="btn-icon" style="background: none; border: none; color: var(--color-accent); cursor: pointer;"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteStudent('${s.id}')" class="btn-icon" style="background: none; border: none; color: #ff4d4d; cursor: pointer;"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function setupRealtime() {
+            const supabase = getSupabase();
+            realtimeChannel = supabase.channel('student-db-changes').on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, () => {
+                loadInitialData();
+            }).subscribe();
+            
+            console.log("Realtime Subscription Active");
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', renderStudents);
+        courseFilter.addEventListener('change', renderStudents);
+        batchFilter.addEventListener('change', renderStudents);
+
+        document.getElementById('addStudentBtn').addEventListener('click', () => {
+            studentForm.reset();
+            document.getElementById('studentId').value = '';
+            document.getElementById('modalTitle').textContent = 'Add New Student';
+            modal.style.display = 'flex';
+        });
+
+        document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
+            btn.addEventListener('click', () => modal.style.display = 'none');
+        });
+
+        studentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('studentId').value;
+            const selectedCourses = Array.from(document.querySelectorAll('input[name="courses"]:checked')).map(cb => cb.value);
+            
+            const studentData = {
+                name: document.getElementById('studentName').value,
+                email: document.getElementById('studentEmail').value,
+                phone: document.getElementById('studentPhone').value,
+                courses: selectedCourses,
+                updated_at: new Date()
+            };
+
+            try {
+                if (id) {
+                    await adminService.updateStudent(id, studentData);
+                } else {
+                    studentData.attendance_percentage = 0;
+                    studentData.created_at = new Date();
+                    await adminService.addStudent(studentData);
+                }
+                modal.style.display = 'none';
+            } catch (err) {
+                alert("Error saving student: " + err.message);
+            }
+        });
+
+        window.editStudent = (id) => {
+            const s = students.find(x => x.id === id);
+            if (!s) return;
+
+            document.getElementById('studentId').value = s.id;
+            document.getElementById('studentName').value = s.name;
+            document.getElementById('studentEmail').value = s.email;
+            document.getElementById('studentPhone').value = s.phone;
+            
+            document.querySelectorAll('input[name="courses"]').forEach(cb => {
+                cb.checked = s.courses && s.courses.includes(cb.value);
+            });
+
+            document.getElementById('modalTitle').textContent = 'Edit Student';
+            modal.style.display = 'flex';
+        };
+
+        window.deleteStudent = async (id) => {
+            if (confirm("Are you sure you want to delete this student?")) {
+                try {
+                    await adminService.deleteStudent(id);
+                } catch (err) {
+                    alert("Error deleting student: " + err.message);
+                }
+            }
+        };
+
+        init();
+    </script>
+</body>
+</html>

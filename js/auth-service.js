@@ -27,8 +27,30 @@ export const authService = {
     },
 
     async signOut() {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
+        console.log("Logout Clicked");
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+            
+            // Clear all local storage/session storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Remove specific Supabase keys if any remain
+            Object.keys(localStorage).forEach(key => {
+                if (key.includes('sb-') || key.includes('supabase')) {
+                    localStorage.removeItem(key);
+                }
+            });
+
+            console.log("Supabase Session Cleared");
+        } catch (err) {
+            console.error("Logout failed:", err);
+            // Even if it fails, try to clear local data
+            localStorage.clear();
+            sessionStorage.clear();
+            throw err;
+        }
     },
 
     async getCurrentUser() {

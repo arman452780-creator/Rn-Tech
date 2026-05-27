@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Gallery | RN-TECH Admin</title>
+    <link rel="icon" href="Favicon.jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="admin-common.css">
+    <style>
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s;
+        }
+
+        .gallery-item img, .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--color-border);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--color-accent);
+            background: var(--color-accent-dim);
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <a href="index.html" class="logo">RN-TECH<span style="color: #00f2ff;">.</span> Admin</a>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <a href="admin-dashboard.html" class="nav-link">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-students.html" class="nav-link">
+                    <i class="fas fa-user-graduate"></i> <span>Students</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-courses.html" class="nav-link">
+                    <i class="fas fa-book"></i> <span>Courses</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-notices.html" class="nav-link">
+                    <i class="fas fa-bullhorn"></i> <span>Notices</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-gallery.html" class="nav-link active">
+                    <i class="fas fa-images"></i> <span>Gallery</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i> <span>Messages</span>
+                </a>
+            </div>
+        </nav>
+        <div class="logout-btn" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <h1 class="page-title">Gallery</h1>
+                <p style="color: var(--color-text-dim); margin-top: 0.5rem;">Manage platform media and assets.</p>
+            </div>
+            <button class="btn-primary" id="openUploadModal">
+                <i class="fas fa-upload"></i> Upload Media
+            </button>
+        </header>
+
+        <section class="gallery-grid" id="galleryGrid">
+            <!-- Skeleton Cards -->
+            <div class="gallery-item skeleton"></div>
+            <div class="gallery-item skeleton"></div>
+            <div class="gallery-item skeleton"></div>
+            <div class="gallery-item skeleton"></div>
+        </section>
+    </main>
+
+    <!-- Modal: Upload Media -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal-content">
+            <button class="modal-close"><i class="fas fa-times"></i></button>
+            <h2 style="margin-bottom: 2rem;">Upload Media</h2>
+            <form id="uploadForm">
+                <div class="upload-zone" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--color-accent); margin-bottom: 1rem;"></i>
+                    <p style="margin-bottom: 0.5rem;">Click or Drag & Drop media here</p>
+                    <p style="font-size: 0.8rem; color: var(--color-text-dim);">Supported: JPG, PNG, MP4 (Max 10MB)</p>
+                    <input type="file" id="fileInput" hidden accept="image/*,video/*">
+                </div>
+                <div id="filePreview" style="margin-top: 1.5rem; display: none;">
+                    <p id="fileName" style="font-size: 0.9rem; margin-bottom: 1rem;"></p>
+                    <div class="input-group">
+                        <label class="input-label">Category</label>
+                        <select id="mediaCategory" class="form-input">
+                            <option value="Events">Events</option>
+                            <option value="Campus">Campus</option>
+                            <option value="Students">Students</option>
+                            <option value="Achievements">Achievements</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="display: flex; align-items: center; gap: 10px; margin-top: 1rem;">
+                        <input type="checkbox" id="showInSlider" style="width: 20px; height: 20px; accent-color: var(--color-accent);">
+                        <label class="input-label" style="margin-bottom: 0; cursor: pointer;" for="showInSlider">Show in Homepage Slider</label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn-primary" id="submitBtn" style="flex: 1;" disabled>Start Upload</button>
+                    <button type="button" class="btn-outline modal-close-btn" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        import { authService } from './js/auth-service.js';
+        import { adminService } from './js/admin-service.js';
+        import { getSupabase } from './js/supabase-client.js';
+
+        const galleryGrid = document.getElementById('galleryGrid');
+        const modal = document.getElementById('uploadModal');
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        const submitBtn = document.getElementById('submitBtn');
+
+        let mediaItems = [];
+        let realtimeChannel = null;
+
+        async function init() {
+            const user = await authService.getCurrentUser();
+            if (!user) { window.location.href = 'admin-login.html'; return; }
+            
+            loadGallery();
+            setupRealtime();
+            console.log("Gallery Synced");
+        }
+
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                if (realtimeChannel) {
+                    const supabase = getSupabase();
+                    await supabase.removeChannel(realtimeChannel);
+                    console.log("Realtime Subscriptions Removed");
+                }
+                await authService.signOut();
+                console.log("Redirecting To Admin Login");
+                window.location.replace('admin-login.html');
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.replace('admin-login.html');
+            }
+        });
+
+        async function loadGallery() {
+            try {
+                mediaItems = await adminService.getAllGallery();
+                renderGallery();
+            } catch (err) {
+                console.error("Load failed:", err);
+            }
+        }
+
+        function renderGallery() {
+            if (mediaItems.length === 0) {
+                galleryGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 5rem; color: var(--color-text-dim);">Gallery is empty. Upload images to showcase.</div>';
+                return;
+            }
+
+            galleryGrid.innerHTML = mediaItems.map(m => `
+                <div class="gallery-item">
+                    ${m.media_type === 'video' 
+                        ? `<video src="${m.media_url}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>` 
+                        : `<img src="${m.media_url}" alt="Gallery Item" loading="lazy">`
+                    }
+                    ${m.show_in_slider ? `
+                        <div style="position: absolute; top: 10px; left: 10px; background: var(--color-accent); color: #000; padding: 4px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; z-index: 2;">
+                            HOMEPAGE SLIDER
+                        </div>
+                    ` : ''}
+                    <div class="gallery-overlay">
+                        <span style="font-size: 0.7rem; color: var(--color-accent); font-weight: 600; margin-bottom: 4px;">${m.category}</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.75rem; color: var(--color-text-dim);">${new Date(m.uploaded_at).toLocaleDateString()}</span>
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="toggleSliderStatus('${m.id}', ${m.show_in_slider})" title="${m.show_in_slider ? 'Remove from Slider' : 'Add to Slider'}" style="background: ${m.show_in_slider ? 'var(--color-accent)' : 'rgba(255,255,255,0.1)'}; border: none; color: ${m.show_in_slider ? '#000' : '#fff'}; width: 30px; height: 30px; border-radius: 8px; cursor: pointer;">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button onclick="deleteMedia('${m.id}', '${m.media_url}')" style="background: rgba(255,77,77,0.2); border: none; color: #ff4d4d; width: 30px; height: 30px; border-radius: 8px; cursor: pointer;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setupRealtime() {
+            const supabase = getSupabase();
+            realtimeChannel = supabase.channel('gallery-db-changes').on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => {
+                loadGallery();
+            }).subscribe();
+            
+            console.log("Realtime Subscription Active");
+        }
+
+        // Upload Logic
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                document.getElementById('fileName').textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`;
+                document.getElementById('filePreview').style.display = 'block';
+                submitBtn.disabled = false;
+            }
+        });
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = fileInput.files[0];
+            const category = document.getElementById('mediaCategory').value;
+            const type = file.type.startsWith('video') ? 'video' : 'image';
+            const showInSlider = document.getElementById('showInSlider').checked;
+
+            submitBtn.textContent = 'Uploading...';
+            submitBtn.disabled = true;
+
+            try {
+                await adminService.uploadMedia(file, category, type, showInSlider);
+                modal.style.display = 'none';
+                uploadForm.reset();
+                document.getElementById('filePreview').style.display = 'none';
+            } catch (err) {
+                alert("Upload failed: " + err.message);
+            } finally {
+                submitBtn.textContent = 'Start Upload';
+            }
+        });
+
+        window.toggleSliderStatus = async (id, currentStatus) => {
+            try {
+                await adminService.updateMediaSliderStatus(id, !currentStatus);
+                console.log(`Slider status updated for ${id}`);
+            } catch (err) {
+                alert("Update failed: " + err.message);
+            }
+        };
+
+        window.deleteMedia = async (id, url) => {
+            if (confirm("Permanently delete this media?")) {
+                try {
+                    await adminService.deleteMedia(id, url);
+                } catch (err) {
+                    alert("Delete failed: " + err.message);
+                }
+            }
+        };
+
+        // Modal Controls
+        document.getElementById('openUploadModal').addEventListener('click', () => modal.style.display = 'flex');
+        document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => btn.addEventListener('click', () => modal.style.display = 'none'));
+
+        init();
+    </script>
+</body>
+</html>

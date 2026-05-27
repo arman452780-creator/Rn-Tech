@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Batches | RN-TECH Admin</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="admin-common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Modal UI Enhancements */
+        .modal-overlay {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .modal-content {
+            background: rgba(15, 15, 25, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-dim);
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            background: rgba(0, 242, 255, 0.05);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+        }
+
+        textarea.form-control {
+            resize: none;
+            min-height: 100px;
+        }
+
+        /* Custom Toggle Switch */
+        .toggle-group {
+            display: flex;
+            gap: 2.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #fff;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--color-accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-bar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--color-accent);
+            background: rgba(0, 242, 255, 0.05);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .toggle-group {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">RN-TECH <span>ADMIN</span></div>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <a href="admin-dashboard.html" class="nav-link">
+                    <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-students.html" class="nav-link">
+                    <i class="fas fa-user-graduate"></i> <span>Students</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-courses.html" class="nav-link">
+                    <i class="fas fa-book"></i> <span>Courses</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-notices.html" class="nav-link">
+                    <i class="fas fa-bullhorn"></i> <span>Notices</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-batches.html" class="nav-link active">
+                    <i class="fas fa-calendar-alt"></i> <span>Upcoming Batches</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-gallery.html" class="nav-link">
+                    <i class="fas fa-images"></i> <span>Gallery</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="admin-messages.html" class="nav-link">
+                    <i class="fas fa-envelope"></i> <span>Messages</span>
+                </a>
+            </div>
+        </nav>
+        <div class="logout-btn" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <h1 class="page-title">Upcoming Batches</h1>
+                <p style="color: var(--color-text-dim); margin-top: 0.5rem;">Manage future enrollment and schedules.</p>
+            </div>
+            <button class="btn-primary" id="addBatchBtn">
+                <i class="fas fa-plus"></i> Add New Batch
+            </button>
+        </header>
+
+        <div class="glass-card" style="margin-bottom: 2rem;">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div style="flex: 1; position: relative;">
+                    <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--color-text-dim);"></i>
+                    <input type="text" id="batchSearch" class="search-bar" placeholder="Search batches or courses...">
+                </div>
+            </div>
+        </div>
+
+        <div id="batchesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+            <!-- Batches will be loaded here -->
+            <div class="glass-card" style="grid-column: 1/-1; text-align: center; padding: 4rem;">
+                <p style="color: var(--color-text-dim);">Loading batches...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Batch Modal -->
+    <div class="modal-overlay" id="batchModal">
+        <div class="modal-content glass-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Batch</h2>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="batchForm">
+                <input type="hidden" id="batchId">
+                
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Batch Designation</label>
+                        <input type="text" id="batchName" class="form-control" placeholder="e.g., Summer 2024 Evening" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Course</label>
+                        <input type="text" id="courseName" class="form-control" placeholder="e.g., Full Stack Web" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Lead Instructor</label>
+                        <input type="text" id="instructorName" class="form-control" placeholder="e.g., Prof. Alex">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Batch Highlights</label>
+                        <textarea id="batchDescription" class="form-control" placeholder="Briefly describe the key learning objectives..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Commencement Date</label>
+                        <input type="date" id="startDate" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Daily Schedule</label>
+                        <input type="text" id="batchTiming" class="form-control" placeholder="e.g., 06:00 PM - 08:00 PM" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Maximum Intake (Seats)</label>
+                        <input type="number" id="batchSeats" class="form-control" placeholder="e.g., 25" min="0">
+                    </div>
+                </div>
+
+                <div class="toggle-group">
+                    <label class="toggle-item">
+                        <div class="switch">
+                            <input type="checkbox" id="batchPublished" checked>
+                            <span class="slider"></span>
+                        </div>
+                        <span style="font-size: 0.9rem; color: var(--color-text-dim);">Live Status</span>
+                    </label>
+                    <label class="toggle-item">
+                        <div class="switch">
+                            <input type="checkbox" id="batchFeatured">
+                            <span class="slider"></span>
+                        </div>
+                        <span style="font-size: 0.9rem; color: var(--color-text-dim);">Featured Priority</span>
+                    </label>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary modal-close-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-rocket" style="margin-right: 8px;"></i> Save & Broadcast
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { authService } from './js/auth-service.js';
+        import { adminService } from './js/admin-service.js';
+        import { getSupabase } from './js/supabase-client.js';
+        import CONFIG from './js/config.js';
+
+        const batchesList = document.getElementById('batchesList');
+        const modal = document.getElementById('batchModal');
+        const batchForm = document.getElementById('batchForm');
+        let batches = [];
+        let realtimeChannel = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await authService.getCurrentUser();
+            if (!user) { window.location.href = 'admin-login.html'; return; }
+            
+            console.log("Connected Supabase URL:", CONFIG.SUPABASE_URL);
+            
+            loadBatches();
+            setupRealtime();
+        });
+
+        async function loadBatches() {
+            try {
+                batches = await adminService.getAllBatches();
+                renderBatches();
+            } catch (err) {
+                console.error("Load failed:", err);
+            }
+        }
+
+        function renderBatches() {
+            const query = document.getElementById('batchSearch').value.toLowerCase();
+            const filtered = batches.filter(b => 
+                b.batch_name.toLowerCase().includes(query) || 
+                b.course_name.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                batchesList.innerHTML = `<div class="glass-card" style="grid-column: 1/-1; text-align: center; padding: 4rem;"><p style="color: var(--color-text-dim);">No batches found.</p></div>`;
+                return;
+            }
+
+            batchesList.innerHTML = filtered.map(b => {
+                const date = new Date(b.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                
+                let badges = '';
+                if (b.featured) badges += '<span style="font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; background: rgba(0,242,255,0.1); color: #00f2ff; margin-right: 5px;">FEATURED</span>';
+                if (b.published) badges += '<span style="font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; background: rgba(40,167,69,0.1); color: #28a745; margin-right: 5px;">LIVE</span>';
+                else badges += '<span style="font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.05); color: #888; margin-right: 5px;">DRAFT</span>';
+
+                return `
+                    <div class="glass-card" style="display: flex; flex-direction: column; gap: 1rem; border-top: ${b.featured ? '3px solid var(--color-accent)' : 'none'};">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">${b.batch_name}</h3>
+                                <p style="color: var(--color-accent); font-size: 0.85rem; margin-top: 2px;">${b.course_name}</p>
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                <button onclick="window.editBatch('${b.id}')" class="btn-icon" style="background: rgba(0,242,255,0.05); color: #00f2ff; border: none; padding: 8px; border-radius: 8px; cursor: pointer;"><i class="fas fa-edit"></i></button>
+                                <button onclick="window.deleteBatch('${b.id}')" class="btn-icon" style="background: rgba(255,77,77,0.05); color: #ff4d4d; border: none; padding: 8px; border-radius: 8px; cursor: pointer;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem; color: var(--color-text-dim);">
+                            <div><i class="far fa-calendar-alt" style="margin-right: 8px;"></i>${date}</div>
+                            <div><i class="far fa-clock" style="margin-right: 8px;"></i>${b.timing}</div>
+                            <div><i class="far fa-user" style="margin-right: 8px;"></i>${b.instructor || 'TBD'}</div>
+                            <div><i class="fas fa-chair" style="margin-right: 8px;"></i>${b.seats || 0} Seats</div>
+                        </div>
+
+                        <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between;">
+                            <div>${badges}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function setupRealtime() {
+            const supabase = getSupabase();
+            realtimeChannel = supabase.channel('batches-db-changes').on('postgres_changes', { event: '*', schema: 'public', table: 'upcoming_batches' }, () => {
+                loadBatches();
+            }).subscribe();
+        }
+
+        // Action Handlers
+        document.getElementById('addBatchBtn').addEventListener('click', () => {
+            batchForm.reset();
+            document.getElementById('batchId').value = '';
+            document.getElementById('modalTitle').textContent = 'Add New Batch';
+            modal.style.display = 'flex';
+        });
+
+        document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
+            btn.addEventListener('click', () => modal.style.display = 'none');
+        });
+
+        batchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('batchId').value;
+            
+            const batchData = {
+                batch_name: document.getElementById('batchName').value,
+                course_name: document.getElementById('courseName').value,
+                instructor: document.getElementById('instructorName').value,
+                description: document.getElementById('batchDescription').value,
+                start_date: document.getElementById('startDate').value,
+                timing: document.getElementById('batchTiming').value,
+                seats: parseInt(document.getElementById('batchSeats').value) || 0,
+                published: document.getElementById('batchPublished').checked,
+                featured: document.getElementById('batchFeatured').checked,
+                updated_at: new Date()
+            };
+
+            console.log("Saving Batch...", batchData);
+            console.log("Supabase Client:", getSupabase());
+            try {
+                let response;
+                if (id) {
+                    console.log("Updating batch:", id);
+                    response = await adminService.updateBatch(id, batchData);
+                } else {
+                    batchData.created_at = new Date();
+                    console.log("Adding new batch");
+                    response = await adminService.addBatch(batchData);
+                }
+
+                if (response.error) throw response.error;
+
+                console.log("✓ Batch Saved Successfully:", response.data);
+                modal.style.display = 'none';
+                loadBatches();
+            } catch (err) {
+                console.error("✗ Save error:", err);
+                alert("Error saving batch: " + err.message);
+            }
+        });
+
+        window.editBatch = (id) => {
+            const b = batches.find(x => x.id === id);
+            if (!b) return;
+
+            document.getElementById('batchId').value = b.id;
+            document.getElementById('batchName').value = b.batch_name;
+            document.getElementById('courseName').value = b.course_name;
+            document.getElementById('instructorName').value = b.instructor || '';
+            document.getElementById('batchDescription').value = b.description || '';
+            document.getElementById('startDate').value = b.start_date;
+            document.getElementById('batchTiming').value = b.timing;
+            document.getElementById('batchSeats').value = b.seats;
+            document.getElementById('batchPublished').checked = b.published;
+            document.getElementById('batchFeatured').checked = b.featured;
+            
+            document.getElementById('modalTitle').textContent = 'Edit Batch';
+            modal.style.display = 'flex';
+        };
+
+        window.deleteBatch = async (id) => {
+            if (!confirm("Are you sure you want to delete this batch?")) return;
+            try {
+                await adminService.deleteBatch(id);
+                loadBatches();
+            } catch (err) {
+                console.error("Delete error:", err);
+                alert("Error deleting batch: " + err.message);
+            }
+        };
+
+        document.getElementById('batchSearch').addEventListener('input', renderBatches);
+        
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await authService.signOut();
+            window.location.href = 'admin-login.html';
+        });
+    </script>
+</body>
+</html>

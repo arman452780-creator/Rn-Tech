@@ -6,26 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('RN-TECH Supabase Integration Initialized');
 
     // --- Load Notices ---
-    const noticesContainer = document.getElementById('notices-container');
-    if (noticesContainer) {
-        try {
-            const notices = await dbService.getNotices();
-            if (notices && notices.length > 0) {
-                noticesContainer.innerHTML = ''; // Clear placeholders
-                notices.forEach(notice => {
-                    const noticeEl = document.createElement('div');
-                    noticeEl.className = 'notice-item shimmer-glass';
-                    noticeEl.innerHTML = `
-                        <p>${notice.content}</p>
-                        ${notice.type === 'urgent' ? '<span class="badge-new" style="background: var(--color-accent-2);">URGENT</span>' : '<span class="badge-new">NEW</span>'}
-                    `;
-                    noticesContainer.appendChild(noticeEl);
-                });
-            }
-        } catch (error) {
-            console.error('Error loading notices:', error);
-        }
-    }
+    // Moved to initDynamicNotices() for enhanced functionality and realtime sync
 
     // --- Load Recent Admissions ---
     const admissionsContainer = document.getElementById('recent-admissions-container');
@@ -229,7 +210,305 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateUIForLoggedOutUser();
         }
     });
+
+    // --- Dynamic Slider ---
+    await initDynamicSlider();
+
+    // --- Dynamic Notices ---
+    await initDynamicNotices();
+
+    // --- Dynamic Batches ---
+    await initDynamicBatches();
 });
+
+async function initDynamicNotices() {
+    const container = document.getElementById('notices-container');
+    if (!container) return;
+
+    const loadNotices = async () => {
+        console.log("Fetching Homepage Notices...");
+        
+        // Step 1: Direct Test Fetch (Diagnostic)
+        try {
+            const supabase = getSupabase();
+            const { data: testData, error: testError } = await supabase
+                .from('notices')
+                .select('*')
+                .eq('published', true)
+                .order('created_at', { ascending: false });
+            
+            console.log("Direct Test - Homepage Notices:", testData);
+            console.log("Direct Test - Homepage Error:", testError);
+        } catch (e) {
+            console.log("Direct test fetch failed", e);
+        }
+
+        try {
+            const notices = await dbService.getNotices();
+            console.log("Homepage Notices Loaded");
+            console.log("Fetched Notices:", notices);
+
+            if (notices && notices.length > 0) {
+                container.innerHTML = ''; // Clear placeholders
+                
+                const displayNotices = notices.slice(0, 5);
+
+                displayNotices.forEach(notice => {
+                    const createdDate = new Date(notice.created_at);
+                    const now = new Date();
+                    const diffDays = Math.ceil((now - createdDate) / (1000 * 60 * 60 * 24));
+                    const isNew = diffDays <= 7;
+
+                    const noticeEl = document.createElement('div');
+                    noticeEl.className = 'notice-item shimmer-glass';
+                    
+                    if (notice.pinned) {
+                        noticeEl.style.borderLeft = '3px solid var(--color-accent)';
+                    }
+
+                    noticeEl.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <p style="margin: 0; font-weight: 600; color: var(--color-text); font-size: 0.95rem;">
+                                    ${notice.pinned ? '<i class="fas fa-thumbtack" style="color: var(--color-accent); margin-right: 8px; font-size: 0.8rem;"></i>' : ''}
+                                    ${notice.title || 'Notification'}
+                                </p>
+                                ${isNew ? '<span class="badge-new">NEW</span>' : ''}
+                            </div>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--color-text-dim); line-height: 1.4;">${notice.content || notice.description}</p>
+                            <span style="font-size: 0.7rem; color: var(--color-text-dim); opacity: 0.6; align-self: flex-end;">${createdDate.toLocaleDateString()}</span>
+                        </div>
+                    `;
+                    container.appendChild(noticeEl);
+                });
+            } else {
+                container.innerHTML = `
+                    <div class="notice-item shimmer-glass" style="justify-content: center; opacity: 0.7; padding: 2rem 1rem;">
+                        <p style="margin: 0; font-size: 0.9rem; font-style: italic; color: var(--color-text-muted);">No active notices available.</p>
+                    </div>
+                `;
+            }
+            console.log("Realtime Notices Synced");
+        } catch (error) {
+            console.error('Notice Fetch Error:', error);
+            container.innerHTML = `
+                <div class="notice-item shimmer-glass" style="border-left: 3px solid #ff4d4d;">
+                    <p style="margin: 0; font-size: 0.85rem; color: #ff4d4d;"><i class="fas fa-exclamation-circle"></i> Failed to sync announcements. Reconnecting...</p>
+                </div>
+            `;
+        }
+    };
+
+    await loadNotices();
+
+    // Realtime Subscription
+    const supabase = getSupabase();
+    supabase.channel('public:notices')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'notices' }, (payload) => {
+            console.log("Realtime Notice Sync Active", payload);
+            loadNotices();
+        })
+        .subscribe();
+}
+
+/**
+ * Upcoming Batches Integration
+ */
+async function initDynamicBatches() {
+    const container = document.getElementById('upcoming-batches-container');
+    if (!container) return;
+
+    const loadBatches = async () => {
+        try {
+            console.log("Fetching Upcoming Batches...");
+            const batches = await dbService.getUpcomingBatches();
+            console.log("Upcoming Batches Loaded");
+            console.log("Published Batches:", batches);
+
+            if (batches && batches.length > 0) {
+                container.innerHTML = '';
+                
+                // Show max 5
+                batches.slice(0, 5).forEach(batch => {
+                    const batchEl = document.createElement('div');
+                    batchEl.className = 'notice-item shimmer-glass';
+                    
+                    if (batch.featured) {
+                        batchEl.style.borderLeft = '3px solid var(--color-accent)';
+                    }
+
+                    const startDate = new Date(batch.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+                    batchEl.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <p style="margin: 0; font-weight: 600; color: var(--color-text); font-size: 0.95rem;">
+                                    ${batch.batch_name}
+                                </p>
+                                <span class="badge-new">SOON</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 2px;">
+                                <p style="margin: 0; font-size: 0.8rem; color: var(--color-accent); font-weight: 500;">${batch.course_name}</p>
+                                <p style="margin: 0; font-size: 0.75rem; color: var(--color-text-dim); opacity: 0.8;">
+                                    <i class="far fa-clock" style="margin-right: 4px;"></i>${batch.timing}
+                                </p>
+                            </div>
+                            <span style="font-size: 0.7rem; color: var(--color-text-dim); opacity: 0.6; align-self: flex-end; margin-top: 4px;">
+                                Starts: ${startDate}
+                            </span>
+                        </div>
+                    `;
+                    container.appendChild(batchEl);
+                });
+            } else {
+                container.innerHTML = `
+                    <div class="notice-item shimmer-glass" style="justify-content: center; opacity: 0.7; padding: 2rem 1rem;">
+                        <p style="margin: 0; font-size: 0.9rem; font-style: italic; color: var(--color-text-muted);">Stay tuned for new batches!</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Batch Fetch Error:', error);
+            container.innerHTML = `
+                <div class="notice-item shimmer-glass" style="border-left: 3px solid #ff4d4d;">
+                    <p style="margin: 0; font-size: 0.85rem; color: #ff4d4d;">Failed to load batches.</p>
+                </div>
+            `;
+        }
+    };
+
+    await loadBatches();
+
+    // Realtime Sync
+    const supabase = getSupabase();
+    supabase.channel('public:upcoming_batches')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'upcoming_batches' }, (payload) => {
+            console.log("Realtime Batch Sync Active", payload);
+            loadBatches();
+        })
+        .subscribe();
+}
+
+async function initDynamicSlider() {
+    const container = document.getElementById('hero-slider-container');
+    const dotsContainer = document.getElementById('hero-slider-dots');
+    if (!container || !dotsContainer) return;
+
+    const loadSlider = async () => {
+        try {
+            const sliderImages = await dbService.getSliderImages();
+            console.log("Gallery Images Loaded");
+            console.log("Featured Slider Images:", sliderImages);
+
+            if (sliderImages && sliderImages.length > 0) {
+                // Save navigation buttons
+                const prevBtn = container.querySelector('.prev-btn');
+                const nextBtn = container.querySelector('.next-btn');
+                
+                // Clear existing slides and dots
+                container.innerHTML = '';
+                dotsContainer.innerHTML = '';
+
+                // Add dynamic slides
+                sliderImages.forEach((img, index) => {
+                    const slide = document.createElement('div');
+                    slide.className = `slide ${index === 0 ? 'active' : ''}`;
+                    
+                    if (img.media_type === 'video') {
+                        slide.innerHTML = `<video src="${img.media_url}" autoplay muted loop width="100%"></video>`;
+                    } else {
+                        slide.innerHTML = `<img src="${img.media_url}" alt="Slider Image" width="100%" loading="lazy">`;
+                    }
+                    container.appendChild(slide);
+
+                    const dot = document.createElement('span');
+                    dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                    dot.setAttribute('data-slide', index);
+                    dotsContainer.appendChild(dot);
+                });
+
+                // Put buttons back
+                if (prevBtn) container.appendChild(prevBtn);
+                if (nextBtn) container.appendChild(nextBtn);
+                
+                // Re-initialize slider logic from script.js
+                reinitSliderLogic();
+                console.log("Homepage Slider Synced");
+            }
+        } catch (error) {
+            console.error('Error loading slider images:', error);
+        }
+    };
+
+    await loadSlider();
+
+    // Realtime Subscription
+    const supabase = getSupabase();
+    supabase.channel('gallery-slider-changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, (payload) => {
+            console.log("Realtime Gallery Update Active", payload);
+            loadSlider();
+        })
+        .subscribe();
+}
+
+function reinitSliderLogic() {
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    if (!slides.length) return;
+
+    function showSlides(n) {
+        if (n >= slides.length) { slideIndex = 0; }
+        if (n < 0) { slideIndex = slides.length - 1; }
+
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        slides[slideIndex].classList.add('active');
+        if(dots[slideIndex]) dots[slideIndex].classList.add('active');
+    }
+
+    function nextSlide() {
+        showSlides(++slideIndex);
+    }
+
+    function prevSlide() {
+        showSlides(--slideIndex);
+    }
+
+    let slideInterval = setInterval(nextSlide, 4000);
+
+    function startTimer() {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 4000);
+    }
+
+    if(prevBtn) {
+        prevBtn.onclick = () => {
+            prevSlide();
+            startTimer();
+        };
+    }
+    
+    if(nextBtn) {
+        nextBtn.onclick = () => {
+            nextSlide();
+            startTimer();
+        };
+    }
+
+    dots.forEach((dot, index) => {
+        dot.onclick = () => {
+            slideIndex = index;
+            showSlides(slideIndex);
+            startTimer();
+        };
+    });
+}
 
 function showSuccessMessage(form, title, message) {
     form.innerHTML = `
