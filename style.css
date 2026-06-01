@@ -45,8 +45,6 @@
     --shadow-neon-violet: var(--rn-glow-violet);
     --shadow-neon-crimson: var(--rn-glow-crimson);
 }
-    width: 100%;
-}
 
 /* Body uses global background system from global.css */
 
