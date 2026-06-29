@@ -10,29 +10,73 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Load Recent Admissions ---
     const admissionsContainer = document.getElementById('recent-admissions-container');
-    if (admissionsContainer) {
+    
+    async function loadRecentAdmissions() {
+        if (!admissionsContainer) return;
+        
         try {
             const admissions = await dbService.getRecentAdmissions(5);
-            if (admissions && admissions.length > 0) {
-                admissionsContainer.innerHTML = ''; // Clear placeholders
-                admissions.forEach(student => {
-                    const studentEl = document.createElement('div');
-                    studentEl.className = 'notice-item student-item shimmer-glass';
-                    studentEl.innerHTML = `
-                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(student.full_name)}&background=e0b85a&color=000"
-                             alt="Student" class="student-photo">
-                        <div class="student-details">
-                            <p class="student-info">Name : ${student.full_name}</p>
-                            <p class="student-info">Course : ${student.course_name || 'N/A'}</p>
-                        </div>
-                        <span class="badge-new">NEW</span>
-                    `;
-                    admissionsContainer.appendChild(studentEl);
-                });
+            admissionsContainer.innerHTML = ''; // Clear placeholders
+            
+            if (!admissions || admissions.length === 0) {
+                admissionsContainer.innerHTML = `
+                    <div class="notice-item student-item shimmer-glass" style="justify-content: center; text-align: center; padding: 2rem 1rem;">
+                        <p class="student-info" style="color: var(--rn-text-muted);">No recent admissions yet.</p>
+                    </div>
+                `;
+                return;
             }
+            
+            admissions.forEach(student => {
+                const studentEl = document.createElement('div');
+                studentEl.className = 'notice-item student-item shimmer-glass';
+                
+                // Photo or Auto Initials
+                const photoSrc = student.profile_photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.student_name)}&background=e0b85a&color=000&bold=true`;
+                
+                // NEW Badge logic (<= 7 days)
+                let isNew = false;
+                let dateStr = '';
+                if (student.created_at) {
+                    const regDate = new Date(student.created_at);
+                    const now = new Date();
+                    const diffDays = Math.ceil(Math.abs(now - regDate) / (1000 * 60 * 60 * 24)); 
+                    if (diffDays <= 7) isNew = true;
+                    
+                    // Formatting the date nicely (Optional addition as requested)
+                    dateStr = `<p class="student-info" style="font-size: 0.75rem; color: var(--rn-text-muted); margin-top: 4px;"><i class="fas fa-calendar-alt"></i> ${regDate.toLocaleDateString()}</p>`;
+                }
+                
+                studentEl.innerHTML = `
+                    <img src="${photoSrc}" alt="Student" class="student-photo">
+                    <div class="student-details">
+                        <p class="student-info">Name : ${student.student_name || 'N/A'}</p>
+                        <p class="student-info">Course : ${student.course || 'N/A'}</p>
+                        ${dateStr}
+                    </div>
+                    ${isNew ? '<span class="badge-new">NEW</span>' : ''}
+                `;
+                admissionsContainer.appendChild(studentEl);
+            });
         } catch (error) {
             console.error('Error loading admissions:', error);
         }
+    }
+    
+    // Initial Load
+    loadRecentAdmissions();
+    
+    // Auto Update with Supabase Realtime
+    try {
+        const supabase = getSupabase();
+        supabase.channel('public:students_changes')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'students' }, payload => {
+                console.log('New student registered:', payload.new);
+                loadRecentAdmissions(); // Auto-refresh the list
+            })
+            .subscribe();
+    } catch(err) {
+        console.warn("Realtime subscription failed:", err);
     }
 
     // --- Load Dynamic Courses (for courses.html) ---
@@ -56,10 +100,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     courseEl.className = 'course-card-item color-green';
                     courseEl.innerHTML = `
                         <div class="course-info">
-                            <p><strong>Course Name :</strong> ${course.title}</p>
+                            <p><strong>Course Name :</strong> ${course.course_name || course.title}</p>
                             <p><strong>Duration :</strong> ${course.duration || 'N/A'}</p>
                             <p><strong>Fee :</strong> ₹ ${course.fees || 'N/A'}</p>
-                            <p><strong>Content :</strong> ${course.description || 'N/A'}</p>
+                            <p><strong>Content :</strong> ${(course.subjects && course.subjects.length > 0) ? course.subjects.join(' ') : (course.description || 'N/A')}</p>
                         </div>
                         <div style="display: flex; gap: 10px;">
                             <a href="apply.html?course=${encodeURIComponent(course.title)}" class="btn btn-apply">Apply</a>
@@ -118,36 +162,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    const registerForm = document.getElementById('courseRegisterForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitBtn = registerForm.querySelector('button[type="submit"]');
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
-
-            const formData = new FormData(registerForm);
-            const data = Object.fromEntries(formData.entries());
-            
-            try {
-                // Map complex form data to Supabase table
-                await dbService.submitRegistration({
-                    full_name: data.name,
-                    email: data.email,
-                    phone: data.contact,
-                    course_name: data.courses,
-                    status: 'pending'
-                    // Add other fields as needed to your Supabase table
-                });
-                
-                showSuccessMessage(registerForm, 'Registration Sent', 'Thank you! We received your registration and will contact you shortly.');
-            } catch (error) {
-                console.error('Error submitting registration:', error);
-                submitBtn.textContent = 'Error. Try Again.';
-                submitBtn.disabled = false;
-            }
-        });
-    }
+    // Registration logic moved to registration.js
 
     // --- Handle Contact Form ---
     const contactForm = document.getElementById('contactForm');
@@ -538,6 +553,9 @@ async function updateUIForLoggedInUser(user) {
             .select('role')
             .eq('id', user.id)
             .single();
+
+        // Check again after await to prevent race condition if auth state changes rapidly
+        if (document.getElementById('nav-user-profile')) return;
 
         const profileLink = document.createElement('a');
         profileLink.className = 'nav-link';

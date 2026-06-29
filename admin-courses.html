@@ -58,6 +58,9 @@
                 <h1 class="page-title">Courses</h1>
                 <p style="color: var(--color-text-dim); margin-top: 0.5rem;">Create and manage educational programs.</p>
             </div>
+            <button class="btn-primary" id="importCoursesBtn" style="background-color: var(--color-accent); margin-right: 10px;">
+                <i class="fas fa-download"></i> Import Courses
+            </button>
             <button class="btn-primary" id="addCourseBtn">
                 <i class="fas fa-plus"></i> Add Course
             </button>
@@ -210,6 +213,67 @@
         }
 
         // Event Listeners
+        document.getElementById('importCoursesBtn').addEventListener('click', async () => {
+            if (!confirm("This will import hardcoded courses from courses.html into the database. Proceed?")) return;
+            try {
+                const btn = document.getElementById('importCoursesBtn');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+                btn.disabled = true;
+                
+                const response = await fetch('courses.html');
+                const htmlText = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+                
+                const courseCards = doc.querySelectorAll('.course-card-item');
+                let imported = 0;
+                
+                for (const card of courseCards) {
+                    const info = card.querySelector('.course-info');
+                    if (!info) continue;
+                    
+                    const pTags = info.querySelectorAll('p');
+                    let name = '', duration = '', fee = '', content = '';
+                    
+                    pTags.forEach(p => {
+                        const text = p.textContent;
+                        if (text.includes('Course Name :')) name = text.replace('Course Name :', '').trim();
+                        if (text.includes('Duration :')) duration = text.replace('Duration :', '').trim();
+                        if (text.includes('Fee :')) fee = text.replace(/Fee\s*:\s*(?:₹)?/, '').trim();
+                        if (text.includes('Content :')) content = text.replace('Content :', '').trim();
+                    });
+                    
+                    if (name) {
+                        // Check if it already exists to avoid duplicates
+                        if (!courses.some(c => c.course_name === name)) {
+                            await adminService.addCourse({
+                                course_name: name,
+                                duration: duration,
+                                fees: fee,
+                                instructor: 'Admin',
+                                subjects: content ? content.split(' ') : [],
+                                batches: [],
+                                active: true,
+                                created_at: new Date(),
+                                updated_at: new Date()
+                            });
+                            imported++;
+                        }
+                    }
+                }
+                
+                alert(`Successfully imported ${imported} new courses.`);
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            } catch (err) {
+                alert("Error importing courses: " + err.message);
+                const btn = document.getElementById('importCoursesBtn');
+                btn.innerHTML = '<i class="fas fa-download"></i> Import Courses';
+                btn.disabled = false;
+            }
+        });
+
         document.getElementById('addCourseBtn').addEventListener('click', () => {
             courseForm.reset();
             document.getElementById('courseId').value = '';

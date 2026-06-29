@@ -74,28 +74,24 @@
                                 <label>ADMISSION YEAR <span class="err" style="color:red">*</span></label>
                                 <input name="username" type="hidden" id="username" value="4596">
                                 <input name="branch" type="hidden" id="branch" value="5">
-                                <select name="asession" required class="form-control">
+                                <select name="asession" id="asession" required class="form-control">
                                     <option value="">Select year</option>
                                     <option value="2023">2023-2024</option>
                                     <option value="2024">2024-2025</option>
                                     <option value="2025">2025-2026</option>
                                     <option value="2026">2026-2027</option>
+                                    <option value="2027">2027-2028</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label>Student Name <span class="err" style="color:red">*</span></label>
-                                <input name="name" type="text" id="name" required class="form-control">
+                                <input name="name" type="text" id="name" required class="form-control title-case-input">
                             </div>
 
                             <div class="form-group">
                                 <label>Father's Name <span class="err" style="color:red">*</span></label>
-                                <input name="father" type="text" id="father" required class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Mother's Name</label>
-                                <input name="mother" type="text" id="mother" class="form-control">
+                                <input name="father" type="text" id="father" required class="form-control title-case-input">
                             </div>
 
                             <div class="form-group">
@@ -114,126 +110,37 @@
                             </div>
 
                             <div class="form-group">
-                                <label>PAN No</label>
-                                <input name="pan" type="text" maxlength="15" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Category</label>
-                                <select name="category" class="form-control">
-                                    <option value="">Select</option>
-                                    <option value="SC">SC</option>
-                                    <option value="ST">ST</option>
-                                    <option value="GEN">GEN</option>
-                                    <option value="OBC">OBC</option>
-                                    <option value="BC1">BC1</option>
-                                    <option value="BC2">BC2</option>
-                                    <option value="EBC">EBC</option>
-                                    <option value="EWS">EWS</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
                                 <label>Mobile No <span class="err" style="color:red">*</span></label>
-                                <input name="contact" type="text" required maxlength="10" class="form-control">
+                                <input name="contact" type="text" id="contact" required pattern="\d{10}" maxlength="10" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10);">
                             </div>
 
                             <div class="form-group">
-                                <label>WhatsApp No</label>
-                                <input name="whatsappcontact" type="text" maxlength="10" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Parent's Contact</label>
-                                <input name="fcontact" type="text" maxlength="10" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Select Your Religion</label>
-                                <select name="religion" class="form-control">
-                                    <option value="">Select</option>
-                                    <option value="Hinduism">Hinduism</option>
-                                    <option value="Islam">Islam</option>
-                                    <option value="Christian">Christian</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Marital Status</label>
-                                <select name="marital" class="form-control">
-                                    <option value="">Select</option>
-                                    <option value="Married">Married</option>
-                                    <option value="Unmarried">Unmarried</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Choose Your Identity Type</label>
-                                <select name="identity_type" class="form-control">
-                                    <option value="">Select</option>
-                                    <option value="Adhar Card">Adhar Card</option>
-                                    <option value="Voter ID">Voter ID</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Id Number <span class="err" style="color:red">*</span></label>
-                                <input name="idnumber" type="text" id="idnumber" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Last General Qualification</label>
-                                <select name="qui" class="form-control">
-                                    <option value="">Select</option>
-                                    <option value="8th">8th</option>
-                                    <option value="10th">10th</option>
-                                    <option value="12th">12th</option>
-                                    <option value="Graduation">Graduation</option>
-                                    <option value="Post Graduation">Post Graduation</option>
-                                    <option value="Others">Others</option>
-                                </select>
+                                <label>Guardian Mobile No <span class="err" style="color:red">*</span></label>
+                                <input name="guardian_contact" type="text" id="guardian_contact" required pattern="\d{10}" maxlength="10" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10);">
                             </div>
 
                             <div class="form-group">
                                 <label>State <span class="err" style="color:red">*</span></label>
-                                <select name="state" class="form-control" required>
-                                    <option value="">Select</option>
-                                    <option value="5">Bihar</option>
-                                    <option value="35">Uttar Pradesh</option>
-                                    <option value="Other">Other</option>
-                                </select>
+                                <input name="state" type="text" class="form-control title-case-input" required list="state-list" placeholder="Select or type state">
+                                <datalist id="state-list">
+                                    <option value="Bihar"></option>
+                                    <option value="Uttar Pradesh"></option>
+                                </datalist>
                             </div>
 
                             <div class="form-group">
                                 <label>District</label>
-                                <select name="district" class="form-control">
-                                    <option value="">--Select--</option>
-                                </select>
+                                <input name="district" type="text" class="form-control title-case-input" list="district-list" placeholder="Select or type district">
+                                <datalist id="district-list">
+                                    <option value="Madhubani"></option>
+                                    <option value="Darbhanga"></option>
+                                    <option value="Patna"></option>
+                                </datalist>
                             </div>
 
                             <div class="form-group">
                                 <label>Address</label>
-                                <textarea name="address" class="form-control" rows="1"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Pincode <span class="err" style="color:red">*</span></label>
-                                <input name="pincode" type="text" id="pincode" required class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Email Id</label>
-                                <input name="email" type="email" id="email" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Photo</label>
-                                <div style="display:flex; align-items: center; gap: 10px;">
-                                    <input name="uploaded_file" type="file" class="form-control" id="uploaded_file_small" style="padding: 5px;">
-                                </div>
-                                <span style="color:var(--color-text-muted); font-size:0.8rem;">Photo must be in .jpg/.jpeg/.bmp and size less than 500KB</span>
+                                <textarea name="address" id="address" class="form-control title-case-input" rows="1"></textarea>
                             </div>
 
                             <div class="col-full">
@@ -243,15 +150,15 @@
 
                             <div class="form-group">
                                 <label>Course Category <span class="err" style="color:red">*</span></label>
-                                <select required name="program" class="form-control">
+                                <select required name="program" id="program" class="form-control">
                                     <option value="">-- COURSE CATEGORY --</option>
-                                    <option value="3">Basic Course</option>
-                                    <option value="4">Certificate Course</option>
-                                    <option value="5">Diploma Course</option>
-                                    <option value="6">Language Course</option>
-                                    <option value="7">Professional Course</option>
-                                    <option value="8">Typing Course</option>
-                                    <option value="9">Training Course</option>
+                                    <option value="3" data-fee="1500">Basic Course</option>
+                                    <option value="4" data-fee="2500">Certificate Course</option>
+                                    <option value="5" data-fee="4500">Diploma Course</option>
+                                    <option value="6" data-fee="3500">Language Course</option>
+                                    <option value="7" data-fee="5500">Professional Course</option>
+                                    <option value="8" data-fee="2000">Typing Course</option>
+                                    <option value="9" data-fee="3000">Training Course</option>
                                 </select>
                             </div>
 
@@ -261,70 +168,28 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Batch <span class="err" style="color:red">*</span></label>
-                                <select name="batch" class="form-control" required>
-                                    <option value="">-- Section --</option>
-                                    <option value="17">MWF 07:00 AM TO 08:00 AM</option>
-                                    <option value="18">TTS 07:00 AM TO 08:00 AM</option>
-                                    <option value="33">MWF 08:00 AM TO 09:00 AM</option>
-                                </select>
+                                <label>Course Duration</label>
+                                <input type="text" id="courseDuration" name="duration" class="form-control" readonly>
                             </div>
 
                             <div class="form-group">
                                 <label>NET FEE</label>
-                                <input type="number" name="fee" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Nationality</label>
-                                <select name="nationality" class="form-control" required>
-                                    <option value="">Select</option>
-                                    <option value="Indian">Indian</option>
-                                    <option value="Others">Others</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>DISCOUNT</label>
-                                <input type="text" name="discount" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Other Charge</label>
-                                <input type="text" name="other" class="form-control">
+                                <input type="number" id="fee" name="fee" class="form-control">
                             </div>
 
                             <div class="form-group">
                                 <label>Date of Admission <span class="err" style="color:red">*</span></label>
-                                <input name="doj" type="date" id="doj" required class="form-control">
+                                <input name="doj" type="date" id="doj" required class="form-control" readonly>
                             </div>
 
-                            <div class="form-group">
-                                <label style="color:var(--color-accent);">Enquiry Source</label>
-                                <select name="enquiry_source" class="form-control">
-                                    <option value="">Select</option>
-                                    <option value="Banner">Banner</option>
-                                    <option value="Liflet">Liflet</option>
-                                    <option value="Poster">Poster</option>
-                                    <option value="News_Paper">News Paper</option>
-                                    <option value="SMS">SMS</option>
-                                    <option value="Counseling_Centre">Counseling Centre</option>
-                                    <option value="Others">Others</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group" style="margin-top: 15px;">
-                                <button type="submit" class="btn btn-primary w-100" style="background-color: #006600; color: #FFF; border: none;">Submit</button>
-                            </div>
-
-                            <div class="form-group" style="margin-top: 15px;">
-                                <a href="courses.html" class="btn w-100" style="background-color: #FF0000; color: #FFF; border: none; text-align: center;">Exit</a>
+                            <div class="action-bar col-full">
+                                <a href="courses.html" class="btn btn-exit">Exit</a>
+                                <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
 
                             <div class="col-full" style="text-align: center; color: var(--color-text-muted); font-size: 0.85rem;">
                                 <hr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin: 10px 0;">
-                                <span class="err" style="color:red">*</span> denotes required field &nbsp;&nbsp;
-                                <img src="images/cross.png" width="12" height="12" alt="x" style="display:inline-block; filter: invert(1);"> denotes Form No. already Exist
+                                <span class="err" style="color:red">*</span> denotes required field
                             </div>
                         </div>
                     </form>
@@ -346,6 +211,8 @@
     <!-- Custom JS -->
     <script src="script.js"></script>
     <script type="module" src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="js/registration.js"></script>
 </body>
 
 </html>

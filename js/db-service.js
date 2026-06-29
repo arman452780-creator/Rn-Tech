@@ -23,7 +23,7 @@ export const dbService = {
         const { data, error } = await supabase
             .from('courses')
             .select('*')
-            .eq('is_active', true);
+            .eq('active', true);
         
         if (error) throw error;
         return data;
@@ -52,9 +52,8 @@ export const dbService = {
     // --- Recent Admissions (for index page) ---
     async getRecentAdmissions(limit = 5) {
         const { data, error } = await supabase
-            .from('registrations')
-            .select('full_name, course_name, created_at')
-            .eq('status', 'approved') // Only show approved ones
+            .from('students')
+            .select('student_name, course, created_at, profile_photo_url')
             .order('created_at', { ascending: false })
             .limit(limit);
         

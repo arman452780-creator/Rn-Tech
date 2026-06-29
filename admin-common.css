@@ -263,6 +263,11 @@ body {
     box-shadow: var(--rn-glow-cyan);
 }
 
+select.form-input option {
+    background-color: #0b1121; /* Matches the dark theme background */
+    color: var(--rn-text-primary);
+}
+
 /* Table */
 .data-table {
     width: 100%;
@@ -341,6 +346,14 @@ body {
     overflow-y: auto;
     animation: rn-slide-up var(--rn-transition-ui);
     box-shadow: var(--rn-shadow-xl);
+.modal-content, .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.modal-content::-webkit-scrollbar, .hide-scrollbar::-webkit-scrollbar {
+    display: none;
 }
 
 .modal-close {
@@ -519,4 +532,46 @@ body {
         border-radius: var(--rn-radius-2xl);
         max-height: 90vh;
     }
+    }
+}
+
+/* Premium Toast Notification */
+.rn-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--rn-surface-elevated);
+    color: var(--rn-text-primary);
+    padding: 16px 24px;
+    border-radius: var(--rn-radius-lg);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 99999;
+    border-left: 4px solid var(--rn-color-primary);
+    transform: translateY(100px) scale(0.9);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.rn-toast.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.rn-toast.error {
+    border-left-color: var(--rn-color-danger);
+}
+
+.rn-toast-icon {
+    font-size: 1.4rem;
+}
+
+.rn-toast.success .rn-toast-icon {
+    color: var(--rn-color-primary);
+}
+
+.rn-toast.error .rn-toast-icon {
+    color: var(--rn-color-danger);
 }

@@ -244,21 +244,104 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Register Page URL Parameters ---
-    if (window.location.pathname.includes('register.html')) {
+    // --- Register Page Logic ---
+    if (window.location.pathname.includes('register.html') || document.getElementById('courseRegisterForm')) {
+        // 1. Auto-select current year
+        const currentYear = new Date().getFullYear().toString();
+        const sessionSelect = document.getElementById('asession');
+        if (sessionSelect) {
+            for (let i = 0; i < sessionSelect.options.length; i++) {
+                if (sessionSelect.options[i].value === currentYear) {
+                    sessionSelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        // 2. Auto-fill today's date
+        const dojInput = document.getElementById('doj');
+        if (dojInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dojInput.value = today;
+        }
+
+        // 3. Title case formatting for specific inputs
+        const titleCaseInputs = document.querySelectorAll('.title-case-input');
+        titleCaseInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                let start = this.selectionStart;
+                let end = this.selectionEnd;
+                this.value = this.value.replace(/\b\w/g, function(txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
+                this.setSelectionRange(start, end);
+            });
+        });
+
+        // 4. Net Fee auto-populate removed as requested (default value should be empty)
+        // 5. Course field from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const course = urlParams.get('course');
-        
         if (course) {
             const courseInput = document.getElementById('registerCourse');
             if (courseInput) {
                 courseInput.value = course;
             }
-        }
-        
-        const registerForm = document.getElementById('courseRegisterForm');
-        if (registerForm) {
-            // Logic moved to js/main.js for Supabase integration
+
+            // Auto-select course category based on course name
+            const programSelect = document.getElementById('program');
+            if (programSelect) {
+                const courseUpper = course.toUpperCase();
+                let categoryValue = "3"; // Default to Basic Course
+
+                const exactMatches = {
+                    "CERTIFICATE IN TALLY PRIME": "3",
+                    "MICROSOFT OFFICE": "3",
+                    "MS-OFFICE": "3"
+                };
+
+                if (exactMatches[courseUpper]) {
+                    categoryValue = exactMatches[courseUpper];
+                } else if (courseUpper.includes("TYPING")) {
+                    categoryValue = "8"; // Typing Course
+                } else if (courseUpper.includes("TRAINING")) {
+                    categoryValue = "9"; // Training Course
+                } else if (courseUpper.includes("LANGUAGE") || courseUpper.includes("PROGRAMMING") || ["HTML", "XML", "DHTML", "C+", "C++", "JAVA", "PYTHON", "C#", "FOXPRO"].some(lang => courseUpper.includes(lang))) {
+                    categoryValue = "6"; // Language Course
+                } else if (courseUpper.includes("ADVANCE DIPLOMA") || courseUpper.includes("POST GRADUATE")) {
+                    categoryValue = "5"; // Diploma Course
+                } else if (courseUpper.includes("CERTIFICATE") || courseUpper.includes("DIPLOMA IN")) {
+                    categoryValue = "4"; // Certificate Course
+                }
+
+                programSelect.value = categoryValue;
+
+            }
+
+            // Auto-select course duration based on course name
+            const durationInput = document.getElementById('courseDuration');
+            if (durationInput) {
+                const courseUpper = course.toUpperCase();
+                let duration = "01 Months"; // default
+                
+                if (courseUpper === "POST GRADUATE IN DIPLOMA IN COMPUTER APPLICATION" || courseUpper === "ADVANCE DIPLOMA IN FINANCIAL ACCOUNTING") {
+                    duration = "18 Months";
+                } else if (courseUpper === "ADVANCE DIPLOMA IN COMPUTER APPLICATION") {
+                    duration = "12 Months";
+                } else if (courseUpper === "DIPLOMA IN FINANCIAL ACCOUNTING") {
+                    duration = "09 Months";
+                } else if (courseUpper === "DIPLOMA IN COMPUTER APPLICATION" || courseUpper === "DIPLOMA IN DESKTOP PUBLISHING") {
+                    duration = "06 Months";
+                } else if (courseUpper === "MICROSOFT OFFICE" || courseUpper === "CERTIFICATE IN COMPUTER FINANCIAL ACCOUNTING" || courseUpper === "CERTIFICATE IN FINANCIAL ACCOUNTING" || courseUpper === "DIPLOMA IN OFFICE AUTOMATION") {
+                    duration = "04 Months";
+                } else if (courseUpper === "MS-OFFICE" || courseUpper === "CERTIFICATE IN BASIC COMPUTER" || courseUpper === "CERTIFICATE IN CORE JAVA PROGRAMMING" || courseUpper === "CERTIFICATE IN COMPUTER TYPING" || courseUpper.includes("DIPLOMA IN COMPUTER TYPING")) {
+                    duration = "03 Months";
+                } else if (courseUpper === "TALLY ERP 9" || courseUpper === "MARG ERP" || courseUpper === "CERTIFICATE IN TALLY PRIME" || courseUpper.includes("PROGRAMMING") || courseUpper.includes("TRAINING") || courseUpper.includes("BASIC COMPUTER TYPING")) {
+                    duration = "02 Months";
+                }
+                
+                durationInput.value = duration;
+            }
         }
     }
 
