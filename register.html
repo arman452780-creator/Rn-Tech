@@ -179,7 +179,7 @@
 
                             <div class="form-group">
                                 <label>Date of Admission <span class="err" style="color:red">*</span></label>
-                                <input name="doj" type="date" id="doj" required class="form-control" readonly>
+                                <input name="doj" type="date" id="doj" required class="form-control">
                             </div>
 
                             <div class="action-bar col-full">
@@ -198,6 +198,8 @@
         </section>
     </main>
 
+    <div id="pdf-qrcode" style="display: none;"></div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container footer-container">
@@ -212,6 +214,8 @@
     <script src="script.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WU1yMtaDqjj027cV44QxO1X07U8gv5iXgQ5n1zL931xXq6L4/8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module" src="js/registration.js"></script>
 </body>
 

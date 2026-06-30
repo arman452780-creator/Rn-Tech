@@ -346,6 +346,8 @@ select.form-input option {
     overflow-y: auto;
     animation: rn-slide-up var(--rn-transition-ui);
     box-shadow: var(--rn-shadow-xl);
+}
+
 .modal-content, .hide-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -532,8 +534,9 @@ select.form-input option {
         border-radius: var(--rn-radius-2xl);
         max-height: 90vh;
     }
-    }
+
 }
+
 
 /* Premium Toast Notification */
 .rn-toast {
@@ -574,4 +577,70 @@ select.form-input option {
 
 .rn-toast.error .rn-toast-icon {
     color: var(--rn-color-danger);
+}
+
+/* ============================================================
+   FLOATING ACTION MENU (POPUP)
+   ============================================================ */
+.action-menu-popup {
+    position: absolute;
+    background: rgba(15, 20, 30, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    min-width: 240px;
+    padding: 8px;
+    z-index: 1000;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 200ms ease, transform 200ms ease;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.action-menu-popup.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.action-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+}
+
+.action-menu-item:hover {
+    background: rgba(0, 242, 255, 0.1);
+    color: var(--rn-color-primary, #00f2ff);
+}
+
+/* Mobile Bottom Sheet */
+@media (max-width: 768px) {
+    .action-menu-popup {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translate(-50%, 100%) scale(1);
+        width: 90%;
+        max-width: 400px;
+    }
+    .action-menu-popup.active {
+        transform: translate(-50%, 0) scale(1);
+    }
 }

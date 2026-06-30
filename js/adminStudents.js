@@ -2,6 +2,7 @@ import { authService } from './auth-service.js';
 import { studentService } from './studentService.js';
 import { adminService } from './admin-service.js';
 import { getSupabase } from './supabase-client.js';
+import { generatePDFBlobUrl } from './registration.js';
 
 const tableBody = document.getElementById('studentTableBody');
 const searchInput = document.getElementById('searchInput');
@@ -76,7 +77,7 @@ function renderStudents() {
             </td>
             <td>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn-icon" title="View Details" onclick="viewStudent('${s.id}')" style="background: none; border: none; color: #00f2ff; cursor: pointer;">
+                    <button class="btn-icon" title="View Details" onclick="viewStudent(event, '${s.id}')" style="background: none; border: none; color: #00f2ff; cursor: pointer;">
                         <i class="fas fa-eye"></i>
                     </button>
                     <button class="btn-icon" title="Edit Student" onclick="editStudent('${s.id}')" style="background: none; border: none; color: var(--color-accent); cursor: pointer;">
@@ -137,10 +138,8 @@ function openProfileModal(s, isEdit = false) {
     document.getElementById('inpDoa').value = s.date_of_admission || '';
     document.getElementById('inpStatus').value = s.status || 'Active';
     
-    document.getElementById('sysCreated').value = s.created_at ? new Date(s.created_at).toLocaleString() : 'N/A';
-    document.getElementById('sysUpdated').value = s.updated_at ? new Date(s.updated_at).toLocaleString() : 'N/A';
-    document.getElementById('sysId').value = s.id || 'N/A';
     
+
     setProfileEditMode(isEdit);
     
     profileModal.classList.add('active');
@@ -180,15 +179,102 @@ function closeProfile() {
     }, 300);
 }
 
-window.viewStudent = (id) => {
+let activePopup = null;
+
+window.closeActionPopup = () => {
+    if (activePopup) {
+        activePopup.classList.remove('active');
+        setTimeout(() => {
+            if (activePopup && activePopup.parentNode) {
+                activePopup.parentNode.removeChild(activePopup);
+            }
+            activePopup = null;
+        }, 200);
+    }
+};
+
+window.viewStudent = (event, id) => {
     try {
+        event.stopPropagation();
+        window.closeActionPopup(); // Close existing popup if any
+
         const s = students.find(x => x.id === id);
-        openProfileModal(s, false);
+        if (!s) return;
+
+        // Create popup element
+        const popup = document.createElement('div');
+        popup.className = 'action-menu-popup';
+        
+        popup.innerHTML = `
+            <button class="action-menu-item" id="btn-view-profile">
+                <i class="fas fa-user" style="width: 16px; text-align: center;"></i> View Student Profile
+            </button>
+            <button class="action-menu-item" id="btn-download-pdf">
+                <i class="fas fa-file-pdf" style="width: 16px; text-align: center;"></i> Download Registration Form
+            </button>
+        `;
+
+        document.body.appendChild(popup);
+        activePopup = popup;
+
+        // Position popup
+        if (window.innerWidth <= 768) {
+            // Handled by CSS for mobile
+        } else {
+            const rect = event.currentTarget.getBoundingClientRect();
+            popup.style.top = (rect.bottom + window.scrollY + 8) + 'px';
+            popup.style.left = (rect.left + window.scrollX - (popup.offsetWidth / 2) + (rect.width / 2)) + 'px';
+        }
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+            popup.classList.add('active');
+        });
+
+        // Add event listeners
+        popup.querySelector('#btn-view-profile').addEventListener('click', () => {
+            openProfileModal(s, false);
+            window.closeActionPopup();
+        });
+
+        popup.querySelector('#btn-download-pdf').addEventListener('click', async () => {
+            try {
+                const btn = popup.querySelector('#btn-download-pdf');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="width: 16px; text-align: center;"></i> Generating...';
+                btn.disabled = true;
+
+                const result = await generatePDFBlobUrl(s.registration_no, s.student_id, s);
+                if (result && result.doc) {
+                    result.doc.save(`RNTECH_Registration_${s.registration_no}.pdf`);
+                } else {
+                    showToast('Failed to generate PDF', 'error');
+                }
+            } catch (err) {
+                console.error('PDF Generation error:', err);
+                showToast('Error generating PDF', 'error');
+            } finally {
+                window.closeActionPopup();
+            }
+        });
+
     } catch (e) {
         alert("View Error: " + e.message);
         console.error(e);
     }
 };
+
+window.addEventListener('click', (e) => {
+    if (activePopup && !activePopup.contains(e.target)) {
+        window.closeActionPopup();
+    }
+});
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        window.closeActionPopup();
+    }
+});
 
 window.editStudent = (id) => {
     try {

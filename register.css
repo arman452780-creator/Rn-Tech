@@ -201,3 +201,19 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
     -moz-appearance: textfield; /* Firefox */
 }
+
+/* Fix browser autofill background in dark theme */
+.contact-form input:-webkit-autofill,
+.contact-form input:-webkit-autofill:hover, 
+.contact-form input:-webkit-autofill:focus,
+.contact-form textarea:-webkit-autofill,
+.contact-form textarea:-webkit-autofill:hover,
+.contact-form textarea:-webkit-autofill:focus,
+.contact-form select:-webkit-autofill,
+.contact-form select:-webkit-autofill:hover,
+.contact-form select:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--rn-text-primary, #ffffff);
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+

@@ -200,21 +200,7 @@
                     </div>
                 </div>
 
-                <h3 style="color: var(--color-text-muted); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">System Information</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; opacity: 0.6;">
-                    <div class="input-group">
-                        <label class="input-label" style="font-size: 0.75rem;">Created At</label>
-                        <input type="text" id="sysCreated" class="form-input" style="font-size: 0.8rem; padding: 0.5rem;" disabled>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label" style="font-size: 0.75rem;">Updated At</label>
-                        <input type="text" id="sysUpdated" class="form-input" style="font-size: 0.8rem; padding: 0.5rem;" disabled>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label" style="font-size: 0.75rem;">Record ID</label>
-                        <input type="text" id="sysId" class="form-input" style="font-size: 0.8rem; padding: 0.5rem;" disabled>
-                    </div>
-                </div>
+
 
                 <div id="editActions" style="display: none; gap: 1rem; margin-top: 2rem;">
                     <button type="submit" class="btn btn-primary" style="flex: 1;" id="saveProfileBtn">Save Updates</button>
@@ -237,8 +223,13 @@
         </div>
     </div>
 
+    <!-- Hidden PDF QR Code Container -->
+    <div id="pdf-qrcode" style="display: none;"></div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WU1yMtaDqjj027cV44QxO1X07U8gv5iXgQ5n1zL931xXq6L4/8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module" src="./js/adminStudents.js"></script>
 </body>
 </html>
