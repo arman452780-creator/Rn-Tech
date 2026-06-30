@@ -1,7 +1,128 @@
 import { studentService } from './studentService.js';
 
+let selectedPhotoFile = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('courseRegisterForm');
+    
+    // Photo Upload Logic
+    const photoInput = document.getElementById('studentPhotoInput');
+    const photoArea = document.getElementById('photoUploadArea');
+    const photoPlaceholder = document.getElementById('photoPlaceholder');
+    const photoPreview = document.getElementById('photoPreview');
+    const previewImg = document.getElementById('previewImage');
+    const replaceBtn = document.getElementById('replacePhotoBtn');
+    const removeBtn = document.getElementById('removePhotoBtn');
+    const errorMsg = document.getElementById('photoErrorMsg');
+
+    if (photoInput && photoArea) {
+        // Click to upload
+        photoPlaceholder.addEventListener('click', () => photoInput.click());
+        replaceBtn.addEventListener('click', () => photoInput.click());
+        
+        // Remove photo
+        removeBtn.addEventListener('click', () => {
+            selectedPhotoFile = null;
+            photoInput.value = '';
+            photoPreview.style.display = 'none';
+            photoPlaceholder.style.display = 'flex';
+            errorMsg.style.display = 'none';
+        });
+
+        // Drag and drop
+        photoArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            photoArea.parentElement.classList.add('drag-over');
+        });
+
+        photoArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            photoArea.parentElement.classList.remove('drag-over');
+        });
+
+        photoArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            photoArea.parentElement.classList.remove('drag-over');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                handlePhotoSelection(e.dataTransfer.files[0]);
+            }
+        });
+
+        // File input change
+        photoInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                handlePhotoSelection(e.target.files[0]);
+            }
+        });
+    }
+
+    function handlePhotoSelection(file) {
+        errorMsg.style.display = 'none';
+        
+        // Validate type
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            showPhotoError('Invalid file format. Please upload a JPG, PNG, or WEBP image.');
+            return;
+        }
+        
+        // Validate size (max 2MB before compression)
+        if (file.size > 2 * 1024 * 1024) {
+            showPhotoError('Maximum file size is 2 MB. Please upload a smaller image.');
+            return;
+        }
+
+        processAndPreviewImage(file);
+    }
+
+    function showPhotoError(msg) {
+        errorMsg.textContent = msg;
+        errorMsg.style.display = 'block';
+        selectedPhotoFile = null;
+        photoInput.value = '';
+        photoPreview.style.display = 'none';
+        photoPlaceholder.style.display = 'flex';
+    }
+
+    function processAndPreviewImage(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                // Create canvas for cropping and resizing
+                const canvas = document.createElement('canvas');
+                const targetSize = 400;
+                canvas.width = targetSize;
+                canvas.height = targetSize;
+                const ctx = canvas.getContext('2d');
+                
+                // Calculate crop (center square)
+                let srcX = 0, srcY = 0, srcSize = 0;
+                if (img.width > img.height) {
+                    srcSize = img.height;
+                    srcX = (img.width - srcSize) / 2;
+                } else {
+                    srcSize = img.width;
+                    srcY = (img.height - srcSize) / 2;
+                }
+                
+                // Draw image on canvas
+                ctx.drawImage(img, srcX, srcY, srcSize, srcSize, 0, 0, targetSize, targetSize);
+                
+                // Convert back to file (JPEG, quality 0.8)
+                canvas.toBlob((blob) => {
+                    selectedPhotoFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+                    
+                    // Show preview
+                    previewImg.src = URL.createObjectURL(blob);
+                    photoPlaceholder.style.display = 'none';
+                    photoPreview.style.display = 'flex';
+                }, 'image/jpeg', 0.8);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
     
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -15,12 +136,34 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
 
             try {
+                if (!selectedPhotoFile) {
+                    showErrorPopup('Please upload a passport-size photo to complete registration.');
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                submitBtn.textContent = 'Uploading Photo...';
                 const formData = new FormData(registerForm);
                 const data = Object.fromEntries(formData.entries());
                 
+                // Generate IDs first to use in photo upload path
+                const admissionYear = data.asession || '';
+                const registrationNo = await studentService.generateRegistrationNo(admissionYear);
+                const studentId = await studentService.generateStudentId();
+                
+                // Upload Photo
+                const yearStr = admissionYear ? admissionYear.split('-')[0] : new Date().getFullYear().toString();
+                const photoPath = `${yearStr}/${studentId}.jpg`;
+                const profilePhotoUrl = await studentService.uploadStudentPhoto(selectedPhotoFile, photoPath);
+                
+                submitBtn.textContent = 'Submitting...';
+                
                 // Map the form data to match our students table schema
                 const studentData = {
-                    admission_year: data.asession || '',
+                    registration_no: registrationNo,
+                    student_id: studentId,
+                    admission_year: admissionYear,
                     student_name: data.name || '',
                     father_name: data.father || '',
                     gender: data.gender || '',
@@ -34,7 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     course: data.courses || '',
                     course_duration: data.duration || '',
                     net_fee: data.fee ? parseFloat(data.fee) : null,
-                    date_of_admission: data.doj || null
+                    date_of_admission: data.doj || null,
+                    profile_photo_url: profilePhotoUrl
                 };
 
                 // Register student
@@ -45,6 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Clear the form
                 registerForm.reset();
+                const removeBtn = document.getElementById('removePhotoBtn');
+                if (removeBtn) removeBtn.click();
                 
             } catch (error) {
                 console.error('Error submitting registration:', error);
@@ -217,6 +363,22 @@ function showSuccessPopup(newStudent, studentData) {
     }, 10);
 }
 
+async function getBase64ImageFromUrl(imageUrl) {
+    try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error("Error converting image:", error);
+        return null;
+    }
+}
+
 export async function generatePDFBlobUrl(registrationNo, studentId, studentData) {
     if (!window.jspdf) {
         console.error("jsPDF library is not loaded.");
@@ -368,13 +530,20 @@ export async function generatePDFBlobUrl(registrationNo, studentId, studentData)
         
         if (isStudentSection) {
             doc.setDrawColor(204, 204, 204);
-            doc.rect(margin + boxWidth, startY, 35, currentY - startY);
-            doc.setTextColor(153, 153, 153);
-            doc.setFont('helvetica', 'normal');
-            doc.text("No Photo", margin + boxWidth + 17.5, startY + (currentY - startY)/2 + 1.5, { align: 'center' });
+            const photoW = 35;
+            const photoH = currentY - startY;
+            doc.rect(margin + boxWidth, startY, photoW, photoH);
+            
+            if (studentData.profile_photo_url) {
+                // Pre-fetch base64 outside doc generation logic
+                // But since we can't easily wait here if it wasn't pre-fetched, we will try to fetch it synchronously using await (since the function is async, wait, is drawTableGrid async? No, drawTableGrid is synchronous.)
+                // Ah, drawTableGrid is not async! We should fetch the image before calling drawTableGrid.
+            }
+            // For now we'll put a placeholder or draw it later.
+            // Actually, I'll return the photo rect coordinates so we can draw it after the synchronous grid finishes.
         }
         
-        return currentY;
+        return { newY: currentY, photoRect: isStudentSection ? { x: margin + boxWidth, y: startY, w: 35, h: currentY - startY } : null };
     }
 
     // 1. Admission Details
@@ -387,8 +556,8 @@ export async function generatePDFBlobUrl(registrationNo, studentId, studentData)
         { label: 'Status', value: 'Confirmed' },
         { label: '', value: '' } // filler
     ];
-    y = drawTableGrid(admissionFields, y, false);
-    y += 10;
+    let res1 = drawTableGrid(admissionFields, y, false);
+    y = res1.newY + 10;
     
     // 2. Student Details
     y = drawSectionHeader('STUDENT DETAILS', y);
@@ -403,8 +572,25 @@ export async function generatePDFBlobUrl(registrationNo, studentId, studentData)
         { label: '', value: '' }, // filler to align address to full width
         { label: 'Address', value: studentData.address, fullWidth: true }
     ];
-    y = drawTableGrid(studentFields, y, true);
-    y += 10;
+    let res2 = drawTableGrid(studentFields, y, true);
+    y = res2.newY + 10;
+
+    if (res2.photoRect) {
+        if (studentData.profile_photo_url) {
+            const b64 = await getBase64ImageFromUrl(studentData.profile_photo_url);
+            if (b64) {
+                doc.addImage(b64, 'JPEG', res2.photoRect.x + 1, res2.photoRect.y + 1, res2.photoRect.w - 2, res2.photoRect.h - 2);
+            } else {
+                doc.setTextColor(153, 153, 153);
+                doc.setFont('helvetica', 'normal');
+                doc.text("No Photo", res2.photoRect.x + res2.photoRect.w/2, res2.photoRect.y + res2.photoRect.h/2 + 1.5, { align: 'center' });
+            }
+        } else {
+            doc.setTextColor(153, 153, 153);
+            doc.setFont('helvetica', 'normal');
+            doc.text("No Photo", res2.photoRect.x + res2.photoRect.w/2, res2.photoRect.y + res2.photoRect.h/2 + 1.5, { align: 'center' });
+        }
+    }
     
     // 3. Course Details
     y = drawSectionHeader('COURSE DETAILS', y);
@@ -414,8 +600,8 @@ export async function generatePDFBlobUrl(registrationNo, studentId, studentData)
         { label: 'Course Duration', value: studentData.course_duration },
         { label: 'Total Fee', value: studentData.net_fee ? 'Rs. ' + studentData.net_fee : 'N/A' }
     ];
-    y = drawTableGrid(courseFields, y, false);
-    y += 10;
+    let res3 = drawTableGrid(courseFields, y, false);
+    y = res3.newY + 10;
     
     // 4. Declaration
     y = drawSectionHeader('DECLARATION', y);

@@ -70,6 +70,38 @@
                                 <hr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin: 10px 0 20px 0;">
                             </div>
 
+                            <!-- Student Photo Upload Section -->
+                            <div class="col-full">
+                                <div class="photo-upload-card">
+                                    <div class="photo-upload-header">
+                                        <label>Passport Size Photo <span class="err" style="color:red">*</span></label>
+                                        <p class="photo-upload-hint">Max size: 2MB. Format: JPG, PNG, WEBP.</p>
+                                    </div>
+                                    <div class="photo-upload-body" id="photoUploadArea">
+                                        <input type="file" id="studentPhotoInput" name="student_photo" accept="image/jpeg, image/png, image/webp" hidden>
+                                        
+                                        <!-- Placeholder State -->
+                                        <div class="photo-placeholder" id="photoPlaceholder">
+                                            <div class="avatar-circle">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <span class="upload-text">Click or Drag to Upload</span>
+                                        </div>
+
+                                        <!-- Preview State -->
+                                        <div class="photo-preview" id="photoPreview" style="display: none;">
+                                            <img id="previewImage" src="" alt="Student Photo Preview">
+                                            <div class="photo-actions">
+                                                <button type="button" class="btn btn-sm btn-outline" id="replacePhotoBtn"><i class="fas fa-sync-alt"></i> Replace</button>
+                                                <button type="button" class="btn btn-sm" id="removePhotoBtn" style="color: #ff4d4d; border-color: #ff4d4d;"><i class="fas fa-trash"></i> Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="photoErrorMsg" class="error-text" style="display: none; color: #ff4d4d; font-size: 0.85rem; margin-top: 10px; text-align: center;"></div>
+                                </div>
+                            </div>
+
+
                             <div class="form-group">
                                 <label>ADMISSION YEAR <span class="err" style="color:red">*</span></label>
                                 <input name="username" type="hidden" id="username" value="4596">

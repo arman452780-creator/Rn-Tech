@@ -56,8 +56,8 @@ export const studentService = {
         const supabase = getSupabase();
         
         try {
-            const registrationNo = await this.generateRegistrationNo(studentData.admission_year);
-            const studentId = await this.generateStudentId();
+            const registrationNo = studentData.registration_no || await this.generateRegistrationNo(studentData.admission_year);
+            const studentId = studentData.student_id || await this.generateStudentId();
 
             const finalData = {
                 ...studentData,
@@ -114,6 +114,45 @@ export const studentService = {
 
         if (error) throw error;
         return true;
+    },
+
+    // Upload student photo
+    async uploadStudentPhoto(file, path) {
+        const supabase = getSupabase();
+        try {
+            const { data, error } = await supabase.storage
+                .from('student-photos')
+                .upload(path, file, {
+                    cacheControl: '3600',
+                    upsert: true
+                });
+
+            if (error) throw error;
+
+            const { data: publicUrlData } = supabase.storage
+                .from('student-photos')
+                .getPublicUrl(path);
+
+            return publicUrlData.publicUrl;
+        } catch (error) {
+            console.error('Error uploading photo:', error);
+            throw error;
+        }
+    },
+    
+    // Delete student photo
+    async deleteStudentPhoto(path) {
+        const supabase = getSupabase();
+        try {
+            const { error } = await supabase.storage
+                .from('student-photos')
+                .remove([path]);
+            if (error) throw error;
+            return true;
+        } catch (error) {
+            console.error('Error deleting photo:', error);
+            throw error;
+        }
     },
 
     // Subscribe to real-time changes

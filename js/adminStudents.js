@@ -61,6 +61,13 @@ function renderStudents() {
     tableBody.innerHTML = filtered.map(s => `
         <tr>
             <td>
+                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: var(--color-accent); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #000; box-shadow: 0 0 10px rgba(224, 184, 90, 0.3);">
+                    ${s.profile_photo_url 
+                        ? `<img src="${s.profile_photo_url}" style="width: 100%; height: 100%; object-fit: cover;">` 
+                        : '<i class="fas fa-user-graduate"></i>'}
+                </div>
+            </td>
+            <td>
                 <div style="font-weight: 500;">${s.student_name || 'N/A'}</div>
             </td>
             <td>${s.student_id || 'N/A'}</td>
@@ -104,11 +111,29 @@ function setupRealtime() {
     });
 }
 
+let activePopup = null;
+let adminSelectedPhotoFile = null;
+let adminRemovedPhoto = false;
+
 // Actions
 function openProfileModal(s, isEdit = false) {
     if (!s) return;
     
+    adminSelectedPhotoFile = null;
+    adminRemovedPhoto = false;
+    
     // Header
+    const photoImg = document.getElementById('profPhotoImg');
+    const photoIcon = document.getElementById('profPhotoIcon');
+    if (s.profile_photo_url) {
+        photoImg.src = s.profile_photo_url;
+        photoImg.style.display = 'block';
+        photoIcon.style.display = 'none';
+    } else {
+        photoImg.style.display = 'none';
+        photoIcon.style.display = 'block';
+    }
+    
     document.getElementById('profName').innerText = s.student_name || 'N/A';
     document.getElementById('profRegNo').innerText = s.registration_no || 'N/A';
     document.getElementById('profStudentId').innerText = s.student_id || 'N/A';
@@ -169,6 +194,7 @@ function setProfileEditMode(isEdit) {
     
     document.getElementById('editActions').style.display = isEdit ? 'flex' : 'none';
     document.getElementById('toggleEditBtn').style.display = isEdit ? 'none' : 'block';
+    document.getElementById('adminPhotoControls').style.display = isEdit ? 'flex' : 'none';
 }
 
 function closeProfile() {
@@ -298,6 +324,52 @@ window.deleteStudent = (id) => {
 };
 
 // Event Listeners for new modals
+const adminPhotoInput = document.getElementById('adminPhotoInput');
+if (adminPhotoInput) {
+    document.getElementById('adminReplacePhotoBtn').addEventListener('click', () => adminPhotoInput.click());
+    document.getElementById('adminRemovePhotoBtn').addEventListener('click', () => {
+        adminSelectedPhotoFile = null;
+        adminRemovedPhoto = true;
+        document.getElementById('profPhotoImg').style.display = 'none';
+        document.getElementById('profPhotoIcon').style.display = 'block';
+    });
+    
+    adminPhotoInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            if (file.size > 2 * 1024 * 1024) { showToast('Max file size is 2MB', 'error'); return; }
+            
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const targetSize = 400;
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+                    const ctx = canvas.getContext('2d');
+                    
+                    let srcX = 0, srcY = 0, srcSize = 0;
+                    if (img.width > img.height) { srcSize = img.height; srcX = (img.width - srcSize) / 2; } 
+                    else { srcSize = img.width; srcY = (img.height - srcSize) / 2; }
+                    
+                    ctx.drawImage(img, srcX, srcY, srcSize, srcSize, 0, 0, targetSize, targetSize);
+                    
+                    canvas.toBlob((blob) => {
+                        adminSelectedPhotoFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+                        adminRemovedPhoto = false;
+                        document.getElementById('profPhotoImg').src = URL.createObjectURL(blob);
+                        document.getElementById('profPhotoImg').style.display = 'block';
+                        document.getElementById('profPhotoIcon').style.display = 'none';
+                    }, 'image/jpeg', 0.8);
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
 document.getElementById('closeProfileModal').addEventListener('click', closeProfile);
 document.getElementById('cancelEditBtn').addEventListener('click', () => {
     const id = document.getElementById('profId').value;
@@ -361,6 +433,16 @@ profileForm.addEventListener('submit', async (e) => {
         btn.disabled = true;
         
         const supabase = getSupabase();
+        
+        // Handle photo upload/removal
+        if (adminSelectedPhotoFile) {
+            const s = students.find(x => x.id === id);
+            const yearStr = s.admission_year ? s.admission_year.split('-')[0] : new Date().getFullYear().toString();
+            const photoPath = `${yearStr}/${s.student_id}.jpg`;
+            updates.profile_photo_url = await studentService.uploadStudentPhoto(adminSelectedPhotoFile, photoPath);
+        } else if (adminRemovedPhoto) {
+            updates.profile_photo_url = null;
+        }
         
         // Log the updates to console for debugging
         console.log("Attempting to update student ID:", id, "with data:", updates);
