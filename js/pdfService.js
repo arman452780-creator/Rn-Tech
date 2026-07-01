@@ -8,6 +8,7 @@ export const pdfService = {
         if (!imageUrl) return null;
         try {
             const response = await fetch(imageUrl);
+            if (!response.ok) return null;
             const blob = await response.blob();
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -224,7 +225,7 @@ export const pdfService = {
             { label: 'Student ID', value: studentId },
             { label: 'Admission Year', value: studentData.admission_year },
             { label: 'Admission Date', value: studentData.date_of_admission ? studentData.date_of_admission.split('-').reverse().join('/') : '' },
-            { label: 'Status', value: 'Confirmed' },
+            { label: 'Status', value: studentData.status || 'Confirmed' },
             { label: '', value: '' } // filler
         ];
         let res1 = drawTableGrid(admissionFields, y, false);
@@ -292,6 +293,13 @@ export const pdfService = {
         const sigSpacing = (pageWidth - (margin*2) - (sigWidth*3)) / 2;
         y += 15;
         
+        // Fetch Director Signature image
+        let authSignatureB64 = await this.getBase64ImageFromUrl('Authorized Signature.jpg');
+        if (!authSignatureB64) {
+             // Fallback to Director.jpeg if Authorized Signature.jpg doesn't exist
+             authSignatureB64 = await this.getBase64ImageFromUrl('Director.jpeg');
+        }
+
         // Admin Signature placeholder
         let sigX = margin;
         doc.setDrawColor(51, 51, 51);
@@ -300,7 +308,7 @@ export const pdfService = {
         doc.setTextColor(51, 51, 51);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9);
-        doc.text('Admin Signature', sigX + sigWidth/2, y + 5, { align: 'center' });
+        doc.text('Parent Signature', sigX + sigWidth/2, y + 5, { align: 'center' });
         
         // Student Signature placeholder
         sigX += sigWidth + sigSpacing;
@@ -309,6 +317,14 @@ export const pdfService = {
         
         // Director Signature placeholder
         sigX += sigWidth + sigSpacing;
+        
+        if (authSignatureB64) {
+            // Draw signature image above the line.
+            // Width is matched to the line width, height is proportional (e.g. 15mm)
+            // Adjust Y-position to place the image right above the line without overlap.
+            doc.addImage(authSignatureB64, 'JPEG', sigX, y - 14, sigWidth, 14);
+        }
+        
         doc.line(sigX, y, sigX + sigWidth, y);
         doc.text('Authorized Signature', sigX + sigWidth/2, y + 5, { align: 'center' });
         
