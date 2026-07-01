@@ -164,15 +164,45 @@
         </div>
 
         <section class="recent-activity">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 style="margin: 0;">Recent Applications</h2>
-                <a href="#" style="color: #00f2ff; text-decoration: none; font-size: 0.9rem;">View All</a>
+            <div class="widget-header-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <h2 style="margin: 0;">Live Admissions</h2>
+                
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <div class="widget-search" style="position: relative; min-width: 250px;">
+                        <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--color-text-dim);"></i>
+                        <input type="text" id="recentSearchInput" placeholder="Search students..." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.5rem 1rem 0.5rem 2.5rem; border-radius: 6px;">
+                    </div>
+                    
+                    <div class="widget-filter">
+                        <select id="recentFilterSelect" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.5rem 1rem; border-radius: 6px; outline: none;">
+                            <option value="All">All Time</option>
+                            <option value="Today">Today</option>
+                            <option value="Yesterday">Yesterday</option>
+                            <option value="This Week">This Week</option>
+                            <option value="This Month">This Month</option>
+                        </select>
+                    </div>
+
+                    <a href="javascript:void(0)" onclick="recentApplicationsWidget.viewAll()" style="color: #00f2ff; text-decoration: none; font-size: 0.9rem;">View All</a>
+                </div>
             </div>
-            <div id="applicationsList">
+            
+            <div id="recentApplicationsList">
                 <!-- Skeleton Loading -->
-                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
-                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
-                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
+                <div class="app-card-premium skeleton">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-line" style="width: 60%"></div>
+                        <div class="skeleton-line" style="width: 40%"></div>
+                    </div>
+                </div>
+                <div class="app-card-premium skeleton">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-line" style="width: 60%"></div>
+                        <div class="skeleton-line" style="width: 40%"></div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -180,6 +210,7 @@
     <script type="module">
         import { authService } from './js/auth-service.js';
         import { dashboardService } from './js/dashboard-service.js';
+        import { recentApplicationsWidget } from './js/recentApplicationsWidget.js';
 
         const authOverlay = document.getElementById('authOverlay');
         const adminNameDisplay = document.getElementById('adminName');
@@ -221,13 +252,14 @@
 
         async function initDashboard() {
             loadStats();
-            loadApplications();
+            recentApplicationsWidget.init();
             
-            // Set up realtime updates
+            // Set up realtime updates for stats (widget handles its own)
             dashboardSubscription = dashboardService.subscribeToChanges((table, payload) => {
-                console.log(`Realtime update from ${table}:`, payload);
+                if (table !== 'students' && table !== 'applications' && table !== 'registrations') {
+                    console.log(`Realtime update from ${table}:`, payload);
+                }
                 loadStats();
-                loadApplications();
             });
         }
 
@@ -244,48 +276,7 @@
             }
         }
 
-        async function loadApplications() {
-            try {
-                const apps = await dashboardService.getRecentApplications();
-                renderApplications(apps);
-            } catch (err) {
-                console.error('Failed to load applications:', err);
-                showError('applications');
-            }
-        }
-
-        function renderApplications(apps) {
-            if (!apps || apps.length === 0) {
-                applicationsList.innerHTML = `
-                    <div style="padding: 2rem; text-align: center; color: rgba(255,255,255,0.4);">
-                        No recent applications found.
-                    </div>
-                `;
-                return;
-            }
-
-            applicationsList.innerHTML = apps.map(app => `
-                <div class="app-card">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 45px; height: 45px; background: rgba(0, 242, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #00f2ff;">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div>
-                            <h4 style="margin: 0; font-weight: 500;">${app.full_name || app.name || 'Unknown Student'}</h4>
-                            <p style="margin: 4px 0 0; font-size: 0.85rem; color: rgba(255,255,255,0.5);">
-                                ${app.course_name || app.course || 'N/A'} • ${new Date(app.created_at).toLocaleDateString()}
-                            </p>
-                        </div>
-                    </div>
-                    <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-                        <span class="status-badge status-${(app.status || 'pending').toLowerCase()}">${app.status || 'pending'}</span>
-                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">
-                            ${app.phone || app.email || ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
+        // loadApplications and renderApplications removed (handled by recentApplicationsWidget)
 
         function showError(type) {
             const errorHtml = `

@@ -275,10 +275,10 @@ input[type=number] {
     background: rgba(255, 255, 255, 0.05);
 }
 
-.avatar-circle {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
+.passport-frame {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px; /* Passport square corners */
     background: rgba(0, 0, 0, 0.3);
     border: 2px dashed rgba(255, 255, 255, 0.3);
     display: flex;
@@ -290,7 +290,7 @@ input[type=number] {
     transition: all 0.3s ease;
 }
 
-.photo-placeholder:hover .avatar-circle {
+.photo-placeholder:hover .passport-frame {
     border-color: var(--color-accent);
     color: var(--color-accent);
 }
@@ -309,9 +309,9 @@ input[type=number] {
 }
 
 #previewImage {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    border-radius: 8px; /* Passport square corners */
     object-fit: cover;
     border: 2px solid var(--color-accent);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);

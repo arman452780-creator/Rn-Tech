@@ -2,8 +2,8 @@ import { authService } from './auth-service.js';
 import { studentService } from './studentService.js';
 import { adminService } from './admin-service.js';
 import { getSupabase } from './supabase-client.js';
-import { generatePDFBlobUrl } from './registration.js';
-
+import { imageService } from './imageService.js';
+import { pdfService } from './pdfService.js';
 const tableBody = document.getElementById('studentTableBody');
 const searchInput = document.getElementById('searchInput');
 
@@ -22,7 +22,45 @@ async function init() {
     
     await loadInitialData();
     setupRealtime();
+    checkHighlight();
     console.log("Admin Students Module Loaded");
+}
+
+function checkHighlight() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlight = urlParams.get('highlight');
+    if (highlight) {
+        setTimeout(() => {
+            let rowToHighlight = null;
+            if (highlight === 'latest') {
+                // Assuming the first row is the latest since they are ordered
+                rowToHighlight = tableBody.querySelector('tr');
+            } else {
+                // Find row by data-id or searching the DOM
+                const rows = tableBody.querySelectorAll('tr');
+                for (let r of rows) {
+                    if (r.innerHTML.includes(highlight)) {
+                        rowToHighlight = r;
+                        break;
+                    }
+                }
+            }
+            
+            if (rowToHighlight) {
+                rowToHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                rowToHighlight.style.transition = 'background-color 1s ease';
+                rowToHighlight.style.backgroundColor = 'rgba(0, 242, 255, 0.2)'; // highlight color
+                
+                // Flash and remove
+                setTimeout(() => {
+                    rowToHighlight.style.backgroundColor = 'transparent';
+                }, 2000);
+            }
+            
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }, 500); // Give DOM time to render
+    }
 }
 
 async function loadInitialData() {
@@ -61,7 +99,7 @@ function renderStudents() {
     tableBody.innerHTML = filtered.map(s => `
         <tr>
             <td>
-                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: var(--color-accent); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #000; box-shadow: 0 0 10px rgba(224, 184, 90, 0.3);">
+                <div style="width: 40px; height: 40px; border-radius: 4px; overflow: hidden; background: var(--color-accent); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #000; box-shadow: 0 0 10px rgba(224, 184, 90, 0.3);">
                     ${s.profile_photo_url 
                         ? `<img src="${s.profile_photo_url}" style="width: 100%; height: 100%; object-fit: cover;">` 
                         : '<i class="fas fa-user-graduate"></i>'}
@@ -224,6 +262,12 @@ function setProfileEditMode(isEdit) {
     document.getElementById('editActions').style.display = isEdit ? 'flex' : 'none';
     document.getElementById('toggleEditBtn').style.display = isEdit ? 'none' : 'block';
     document.getElementById('adminPhotoControls').style.display = isEdit ? 'flex' : 'none';
+    
+    const photoContainer = document.getElementById('profPhotoContainer');
+    if (photoContainer) {
+        photoContainer.style.cursor = isEdit ? 'pointer' : 'default';
+        photoContainer.onclick = isEdit ? () => document.getElementById('adminPhotoInput').click() : null;
+    }
 }
 
 function closeProfile() {
@@ -298,7 +342,7 @@ window.viewStudent = (event, id) => {
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="width: 16px; text-align: center;"></i> Generating...';
                 btn.disabled = true;
 
-                const result = await generatePDFBlobUrl(s.registration_no, s.student_id, s);
+                const result = await pdfService.generateBlob(s.registration_no, s.student_id, s);
                 if (result && result.doc) {
                     result.doc.save(`RNTECH_Registration_${s.registration_no}.pdf`);
                 } else {
@@ -353,6 +397,7 @@ window.deleteStudent = (id) => {
     }
 };
 
+
 // Event Listeners for new modals
 const adminPhotoInput = document.getElementById('adminPhotoInput');
 if (adminPhotoInput) {
@@ -364,38 +409,22 @@ if (adminPhotoInput) {
         document.getElementById('profPhotoIcon').style.display = 'block';
     });
     
-    adminPhotoInput.addEventListener('change', (e) => {
+    adminPhotoInput.addEventListener('change', async (e) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
-            if (file.size > 2 * 1024 * 1024) { showToast('Max file size is 2MB', 'error'); return; }
-            
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const targetSize = 400;
-                    canvas.width = targetSize;
-                    canvas.height = targetSize;
-                    const ctx = canvas.getContext('2d');
-                    
-                    let srcX = 0, srcY = 0, srcSize = 0;
-                    if (img.width > img.height) { srcSize = img.height; srcX = (img.width - srcSize) / 2; } 
-                    else { srcSize = img.width; srcY = (img.height - srcSize) / 2; }
-                    
-                    ctx.drawImage(img, srcX, srcY, srcSize, srcSize, 0, 0, targetSize, targetSize);
-                    
-                    canvas.toBlob((blob) => {
-                        adminSelectedPhotoFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-                        adminRemovedPhoto = false;
-                        document.getElementById('profPhotoImg').src = URL.createObjectURL(blob);
-                        document.getElementById('profPhotoImg').style.display = 'block';
-                        document.getElementById('profPhotoIcon').style.display = 'none';
-                    }, 'image/jpeg', 0.8);
-                };
-                img.src = ev.target.result;
-            };
-            reader.readAsDataURL(file);
+            try {
+                const processedBlob = await imageService.openCropEditor(file);
+                adminSelectedPhotoFile = new File([processedBlob], 'photo.jpg', { type: 'image/jpeg' });
+                adminRemovedPhoto = false;
+                document.getElementById('profPhotoImg').src = imageService.generatePreviewUrl(processedBlob);
+                document.getElementById('profPhotoImg').style.display = 'block';
+                document.getElementById('profPhotoIcon').style.display = 'none';
+            } catch (err) {
+                if (err.message !== 'Crop Cancelled') {
+                    showToast(err.message || 'Error processing photo', 'error');
+                }
+            }
+            e.target.value = '';
         }
     });
 }
@@ -494,8 +523,7 @@ profileForm.addEventListener('submit', async (e) => {
         if (adminSelectedPhotoFile) {
             const s = students.find(x => x.id === id);
             const yearStr = s.admission_year ? s.admission_year.split('-')[0] : new Date().getFullYear().toString();
-            const photoPath = `${yearStr}/${s.student_id}.jpg`;
-            updates.profile_photo_url = await studentService.uploadStudentPhoto(adminSelectedPhotoFile, photoPath);
+            updates.profile_photo_url = await imageService.uploadProcessedImage(adminSelectedPhotoFile, s.student_id, yearStr);
         } else if (adminRemovedPhoto) {
             updates.profile_photo_url = null;
         }
