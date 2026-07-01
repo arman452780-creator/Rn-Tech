@@ -54,6 +54,324 @@
             font-size: 0.9rem;
         }
 
+        /* Admissions Dashboard Specific Styles */
+        .premium-app-card {
+            background: rgba(20, 20, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-app-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: rgba(0, 242, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.1);
+            background: rgba(25, 25, 35, 0.85);
+        }
+
+        .app-card-left {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            flex: 1;
+        }
+
+        .app-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(0, 242, 255, 0.1), rgba(0, 85, 255, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00f2ff;
+            font-size: 1.5rem;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .app-details h4 {
+            margin: 0 0 4px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-meta {
+            margin: 0;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .meta-dot {
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+
+        .app-card-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            text-align: right;
+        }
+
+        .app-time {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-new {
+            background: rgba(0, 242, 255, 0.1);
+            color: #00f2ff;
+            border: 1px solid rgba(0, 242, 255, 0.3);
+        }
+        
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .status-verified {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .status-inactive {
+            background: rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Glowing NEW Badge */
+        .badge-glowing-new {
+            position: absolute;
+            top: 12px;
+            right: -25px;
+            background: #00f2ff;
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 25px;
+            transform: rotate(45deg);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.6);
+            animation: pulse-glow 2s infinite;
+            z-index: 2;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.4); }
+            50% { box-shadow: 0 0 15px rgba(0, 242, 255, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.4); }
+        }
+
+        /* Action Menu */
+        .action-menu-wrapper {
+            position: relative;
+        }
+        
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+        }
+
+        .action-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .action-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            width: 220px;
+            padding: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s;
+            z-index: 100;
+        }
+
+        .action-menu-wrapper.active .action-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .action-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+        }
+
+        .action-item.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .action-item.disabled:hover {
+            background: transparent;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .coming-soon-tag {
+            font-size: 0.65rem;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Filter & Search Header */
+        .dashboard-header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .premium-select, .premium-search {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .premium-select:focus, .premium-search:focus {
+            border-color: #00f2ff;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+        }
+        
+        .premium-select option {
+            background: #1a1a24;
+            color: #fff;
+        }
+
+        /* Skeleton Loaders */
+        .skeleton-premium {
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        .app-card.skeleton-app {
+            background: rgba(20, 20, 30, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        
+        .skeleton-avatar {
+            width: 55px; height: 55px; border-radius: 14px;
+        }
+        .skeleton-text {
+            height: 12px; border-radius: 6px; margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .premium-app-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .app-card-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .dashboard-header-controls {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+            }
+            .dashboard-header-controls select, .dashboard-header-controls input {
+                width: 100%;
+            }
+            .recent-activity-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 1rem;
+            }
+        }
+
         /* Access Protection Overlay */
         #authOverlay {
             position: fixed;
@@ -164,24 +482,76 @@
         </div>
 
         <section class="recent-activity">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 style="margin: 0;">Recent Applications</h2>
-                <a href="#" style="color: #00f2ff; text-decoration: none; font-size: 0.9rem;">View All</a>
+            <div class="recent-activity-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-users" style="color: #00f2ff;"></i> Live Admissions
+                </h2>
+                <div class="dashboard-header-controls">
+                    <input type="text" id="studentSearch" class="premium-search" placeholder="Search students...">
+                    <select id="timeFilter" class="premium-select">
+                        <option value="today" selected>Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="all">All</option>
+                    </select>
+                    <a href="admin-students.html" style="color: #00f2ff; text-decoration: none; font-size: 0.9rem; font-weight: 500; white-space: nowrap;">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
             <div id="applicationsList">
                 <!-- Skeleton Loading -->
-                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
-                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
-                <div class="app-card skeleton" style="height: 80px; border: none;"></div>
+                <div class="app-card skeleton-app">
+                    <div class="skeleton-premium skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="skeleton-premium skeleton-text" style="width: 150px;"></div>
+                        <div class="skeleton-premium skeleton-text" style="width: 100px;"></div>
+                    </div>
+                </div>
+                <div class="app-card skeleton-app">
+                    <div class="skeleton-premium skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="skeleton-premium skeleton-text" style="width: 150px;"></div>
+                        <div class="skeleton-premium skeleton-text" style="width: 100px;"></div>
+                    </div>
+                </div>
+                <div class="app-card skeleton-app">
+                    <div class="skeleton-premium skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="skeleton-premium skeleton-text" style="width: 150px;"></div>
+                        <div class="skeleton-premium skeleton-text" style="width: 100px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" style="position: fixed; bottom: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; gap: 10px;"></div>
     </main>
 
     <script type="module">
         import { authService } from './js/auth-service.js';
         import { dashboardService } from './js/dashboard-service.js';
+        import { generatePDFBlobUrl } from './js/registration.js';
 
         const authOverlay = document.getElementById('authOverlay');
+        const adminNameDisplay = document.getElementById('adminName');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        // Stats Elements
+        const statsElements = {
+            students: document.getElementById('totalStudents'),
+            courses: document.getElementById('activeCourses'),
+            pending: document.getElementById('pendingApps'),
+            messages: document.getElementById('newMessages')
+        };
+        
+        const applicationsList = document.getElementById('applicationsList');
+        const searchInput = document.getElementById('studentSearch');
+        const timeFilter = document.getElementById('timeFilter');
+        const toastContainer = document.getElementById('toastContainer');
+        let dashboardSubscription = null;
+        let studentsDataCache = [];
         const adminNameDisplay = document.getElementById('adminName');
         const logoutBtn = document.getElementById('logoutBtn');
         
@@ -219,6 +589,83 @@
             }
         }
 
+        function debounce(func, timeout = 300){
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => { func.apply(this, args); }, timeout);
+            };
+        }
+
+        function getTimeAgo(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffMins < 1) return 'Just Now';
+            if (diffMins < 60) return `${diffMins} minutes ago`;
+            if (diffHours < 24) return `Today ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            if (diffDays === 1) return 'Yesterday';
+            return date.toLocaleDateString();
+        }
+
+        function isNewRegistration(dateString) {
+            if (!dateString) return false;
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            return diffHours < 24;
+        }
+
+        function showToast(title, name, course) {
+            const toast = document.createElement('div');
+            toast.style.background = 'rgba(20, 20, 30, 0.9)';
+            toast.style.backdropFilter = 'blur(10px)';
+            toast.style.border = '1px solid rgba(0, 242, 255, 0.3)';
+            toast.style.borderRadius = '12px';
+            toast.style.padding = '15px 20px';
+            toast.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+            toast.style.display = 'flex';
+            toast.style.gap = '15px';
+            toast.style.alignItems = 'center';
+            toast.style.color = '#fff';
+            toast.style.transform = 'translateY(100px)';
+            toast.style.opacity = '0';
+            toast.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            toast.style.cursor = 'pointer';
+            
+            toast.innerHTML = `
+                <div style="font-size: 24px;">🎉</div>
+                <div>
+                    <h4 style="margin: 0 0 5px 0; font-size: 1rem; color: #00f2ff;">${title}</h4>
+                    <div style="font-size: 0.9rem;">${name || 'Student'}</div>
+                    <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">Course: ${course || 'N/A'} • Just Now</div>
+                </div>
+            `;
+            
+            toast.addEventListener('click', () => {
+                window.location.href = 'admin-students.html';
+            });
+
+            if (toastContainer) {
+                toastContainer.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.transform = 'translateY(0)';
+                    toast.style.opacity = '1';
+                }, 100);
+                setTimeout(() => {
+                    toast.style.transform = 'translateY(100px)';
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 400);
+                }, 5000);
+            }
+        }
+
         async function initDashboard() {
             loadStats();
             loadApplications();
@@ -226,8 +673,24 @@
             // Set up realtime updates
             dashboardSubscription = dashboardService.subscribeToChanges((table, payload) => {
                 console.log(`Realtime update from ${table}:`, payload);
+                if (table === 'students' && payload.eventType === 'INSERT') {
+                    showToast('New Student Registered', payload.new.student_name, payload.new.course_name);
+                    loadApplications();
+                } else if (table === 'students') {
+                    loadApplications();
+                }
                 loadStats();
-                loadApplications();
+            });
+
+            // Listeners
+            if (searchInput) searchInput.addEventListener('input', debounce(loadApplications, 300));
+            if (timeFilter) timeFilter.addEventListener('change', loadApplications);
+            
+            // Global click for action menus
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.action-menu-wrapper')) {
+                    document.querySelectorAll('.action-menu-wrapper.active').forEach(menu => menu.classList.remove('active'));
+                }
             });
         }
 
@@ -245,54 +708,228 @@
         }
 
         async function loadApplications() {
+            applicationsList.innerHTML = `
+                <div class="app-card skeleton-app">
+                    <div class="skeleton-premium skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="skeleton-premium skeleton-text" style="width: 150px;"></div>
+                        <div class="skeleton-premium skeleton-text" style="width: 100px;"></div>
+                    </div>
+                </div>
+                <div class="app-card skeleton-app">
+                    <div class="skeleton-premium skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="skeleton-premium skeleton-text" style="width: 150px;"></div>
+                        <div class="skeleton-premium skeleton-text" style="width: 100px;"></div>
+                    </div>
+                </div>
+            `;
+            
             try {
-                const apps = await dashboardService.getRecentApplications();
+                const searchVal = searchInput ? searchInput.value : '';
+                const filterVal = timeFilter ? timeFilter.value : 'today';
+                const apps = await dashboardService.getRecentStudents(5, filterVal, searchVal);
+                studentsDataCache = apps;
                 renderApplications(apps);
             } catch (err) {
-                console.error('Failed to load applications:', err);
-                showError('applications');
+                console.error('Failed to load registrations:', err);
+                showError('registrations');
             }
         }
+        
+        window.toggleActionMenu = function(event, studentId) {
+            event.stopPropagation();
+            const wrapper = event.currentTarget.closest('.action-menu-wrapper');
+            const isActive = wrapper.classList.contains('active');
+            
+            // Close all other open menus
+            document.querySelectorAll('.action-menu-wrapper.active').forEach(menu => menu.classList.remove('active'));
+            
+            if (!isActive) {
+                wrapper.classList.add('active');
+            }
+        };
+
+        window.previewStudentPDF = async function(event, studentId) {
+            event.stopPropagation();
+            document.querySelectorAll('.action-menu-wrapper.active').forEach(menu => menu.classList.remove('active'));
+            const student = studentsDataCache.find(s => s.student_id === studentId);
+            if (!student) return;
+            
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="width: 20px;"></i> Preparing...';
+            
+            try {
+                const pdfUrl = await generatePDFBlobUrl(student.registration_no, student.student_id, student);
+                if (pdfUrl) {
+                    window.open(pdfUrl, '_blank');
+                }
+            } catch (error) {
+                console.error("PDF Preview Error:", error);
+                alert("Failed to generate PDF");
+            } finally {
+                btn.innerHTML = originalHtml;
+            }
+        };
+        
+        window.downloadStudentPDF = async function(event, studentId) {
+            event.stopPropagation();
+            document.querySelectorAll('.action-menu-wrapper.active').forEach(menu => menu.classList.remove('active'));
+            const student = studentsDataCache.find(s => s.student_id === studentId);
+            if (!student) return;
+            
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="width: 20px;"></i> Downloading...';
+            
+            try {
+                const pdfUrl = await generatePDFBlobUrl(student.registration_no, student.student_id, student);
+                if (pdfUrl) {
+                    const a = document.createElement('a');
+                    a.href = pdfUrl;
+                    a.download = `Registration_${student.registration_no}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+            } catch (error) {
+                console.error("PDF Download Error:", error);
+                alert("Failed to download PDF");
+            } finally {
+                btn.innerHTML = originalHtml;
+            }
+        };
+        
+        window.printStudentPDF = async function(event, studentId) {
+            event.stopPropagation();
+            document.querySelectorAll('.action-menu-wrapper.active').forEach(menu => menu.classList.remove('active'));
+            const student = studentsDataCache.find(s => s.student_id === studentId);
+            if (!student) return;
+            
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="width: 20px;"></i> Printing...';
+            
+            try {
+                const pdfUrl = await generatePDFBlobUrl(student.registration_no, student.student_id, student);
+                if (pdfUrl) {
+                    const printIframe = document.createElement('iframe');
+                    printIframe.style.display = 'none';
+                    printIframe.src = pdfUrl;
+                    document.body.appendChild(printIframe);
+                    printIframe.onload = function() {
+                        printIframe.contentWindow.print();
+                    };
+                }
+            } catch (error) {
+                console.error("PDF Print Error:", error);
+                alert("Failed to print PDF");
+            } finally {
+                btn.innerHTML = originalHtml;
+            }
+        };
 
         function renderApplications(apps) {
             if (!apps || apps.length === 0) {
                 applicationsList.innerHTML = `
-                    <div style="padding: 2rem; text-align: center; color: rgba(255,255,255,0.4);">
-                        No recent applications found.
+                    <div style="padding: 3rem 1rem; text-align: center; color: rgba(255,255,255,0.4); display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; color: rgba(0, 242, 255, 0.2);"></i>
+                        <div style="font-size: 1.1rem; color: #fff;">No recent registrations yet.</div>
+                        <div style="font-size: 0.9rem;">Students will automatically appear here after successful registration.</div>
                     </div>
                 `;
                 return;
             }
 
-            applicationsList.innerHTML = apps.map(app => `
-                <div class="app-card">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 45px; height: 45px; background: rgba(0, 242, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #00f2ff;">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div>
-                            <h4 style="margin: 0; font-weight: 500;">${app.full_name || app.name || 'Unknown Student'}</h4>
-                            <p style="margin: 4px 0 0; font-size: 0.85rem; color: rgba(255,255,255,0.5);">
-                                ${app.course_name || app.course || 'N/A'} • ${new Date(app.created_at).toLocaleDateString()}
-                            </p>
+            applicationsList.innerHTML = apps.map(app => {
+                const photoHtml = app.profile_photo_url 
+                    ? `<img src="${app.profile_photo_url}" class="app-avatar" alt="Avatar">`
+                    : `<div class="app-avatar"><i class="fas fa-user"></i></div>`;
+                    
+                const isNew = isNewRegistration(app.created_at);
+                const newBadgeHtml = isNew ? `<div class="badge-glowing-new">NEW</div>` : '';
+                const timeAgo = getTimeAgo(app.created_at);
+                const statusStr = app.status ? app.status.toUpperCase() : 'PENDING';
+                const statusClass = \`status-\${(app.status || 'pending').toLowerCase()}\`;
+                
+                return \`
+                <div class="premium-app-card" onclick="window.location.href='admin-students.html'">
+                    \${newBadgeHtml}
+                    <div class="app-card-left">
+                        \${photoHtml}
+                        <div class="app-details">
+                            <h4>\${app.student_name || 'Unknown Student'}</h4>
+                            <div class="app-meta">
+                                <span>\${app.course_name || 'N/A'}</span>
+                                <div class="meta-dot"></div>
+                                <span>Reg: \${app.registration_no || 'N/A'}</span>
+                                <div class="meta-dot"></div>
+                                <span>ID: \${app.student_id || 'N/A'}</span>
+                                <div class="meta-dot"></div>
+                                <span>\${app.district || 'N/A'}</span>
+                            </div>
                         </div>
                     </div>
-                    <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-                        <span class="status-badge status-${(app.status || 'pending').toLowerCase()}">${app.status || 'pending'}</span>
-                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">
-                            ${app.phone || app.email || ''}
+                    <div class="app-card-right">
+                        <div style="text-align: right;">
+                            <span class="app-time">\${timeAgo}</span>
+                            <span class="status-badge \${statusClass}">
+                                <i class="fas fa-circle" style="font-size: 6px;"></i> \${statusStr}
+                            </span>
+                        </div>
+                        <div class="action-menu-wrapper">
+                            <button class="action-btn" onclick="toggleActionMenu(event, '\${app.student_id}')">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="action-dropdown">
+                                <button class="action-item" onclick="window.location.href='admin-students.html'; event.stopPropagation();">
+                                    <i class="fas fa-user-circle" style="width: 20px;"></i> View Student
+                                </button>
+                                <button class="action-item" onclick="previewStudentPDF(event, '\${app.student_id}')">
+                                    <i class="fas fa-file-pdf" style="width: 20px;"></i> Preview Form
+                                </button>
+                                <button class="action-item" onclick="downloadStudentPDF(event, '\${app.student_id}')">
+                                    <i class="fas fa-download" style="width: 20px;"></i> Download PDF
+                                </button>
+                                <button class="action-item" onclick="printStudentPDF(event, '\${app.student_id}')">
+                                    <i class="fas fa-print" style="width: 20px;"></i> Print PDF
+                                </button>
+                                <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 5px 0;"></div>
+                                <button class="action-item disabled" onclick="event.stopPropagation()">
+                                    <span><i class="fas fa-money-bill-wave" style="width: 20px;"></i> Fee Details</span>
+                                    <span class="coming-soon-tag">Coming Soon</span>
+                                </button>
+                                <button class="action-item disabled" onclick="event.stopPropagation()">
+                                    <span><i class="fas fa-calendar-check" style="width: 20px;"></i> Attendance</span>
+                                    <span class="coming-soon-tag">Coming Soon</span>
+                                </button>
+                                <button class="action-item disabled" onclick="event.stopPropagation()">
+                                    <span><i class="fas fa-id-card" style="width: 20px;"></i> ID Card</span>
+                                    <span class="coming-soon-tag">Coming Soon</span>
+                                </button>
+                                <button class="action-item disabled" onclick="event.stopPropagation()">
+                                    <span><i class="fas fa-certificate" style="width: 20px;"></i> Certificate</span>
+                                    <span class="coming-soon-tag">Coming Soon</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            `).join('');
+                \`;
+            }).join('');
         }
 
         function showError(type) {
-            const errorHtml = `
-                <div style="color: #ff4d4d; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-exclamation-circle"></i> Error loading ${type}
+            const errorHtml = \`
+                <div style="padding: 2rem; text-align: center; color: rgba(255,255,255,0.6); display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: #ff4d4d;"></i>
+                    <div style="font-size: 1.1rem; color: #fff;">Unable to load recent registrations.</div>
+                    <button onclick="window.location.reload()" style="background: rgba(0, 242, 255, 0.1); color: #00f2ff; border: 1px solid rgba(0, 242, 255, 0.3); padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                        Retry
+                    </button>
                 </div>
-            `;
+            \`;
             
             if (type === 'stats') {
                 Object.values(statsElements).forEach(el => el.innerHTML = '!');

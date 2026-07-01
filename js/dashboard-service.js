@@ -75,30 +75,50 @@ export const dashboardService = {
         }
     },
 
-    // Get recent applications
-    async getRecentApplications(limit = 5) {
+    // Get recent students (admissions dashboard)
+    async getRecentStudents(limit = 5, timeFilter = 'today', searchQuery = '') {
         try {
-            let { data, error } = await supabase
-                .from('applications')
+            let query = supabase
+                .from('students')
                 .select('*')
                 .order('created_at', { ascending: false })
                 .limit(limit);
             
-            if (error) {
-                const { data: regData, error: regError } = await supabase
-                    .from('registrations')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(limit);
+            // Time filter
+            if (timeFilter && timeFilter !== 'all') {
+                const now = new Date();
+                let filterDate = new Date();
                 
-                if (regError) throw regError;
-                data = regData;
+                if (timeFilter === 'today') {
+                    filterDate.setHours(0, 0, 0, 0);
+                } else if (timeFilter === 'yesterday') {
+                    filterDate.setDate(now.getDate() - 1);
+                    filterDate.setHours(0, 0, 0, 0);
+                    const endOfYesterday = new Date(now);
+                    endOfYesterday.setDate(now.getDate() - 1);
+                    endOfYesterday.setHours(23, 59, 59, 999);
+                    query = query.lte('created_at', endOfYesterday.toISOString());
+                } else if (timeFilter === 'week') {
+                    filterDate.setDate(now.getDate() - 7);
+                } else if (timeFilter === 'month') {
+                    filterDate.setMonth(now.getMonth() - 1);
+                }
+                
+                query = query.gte('created_at', filterDate.toISOString());
             }
 
-            console.log("Applications Synced");
+            // Search query (Student Name, Student ID, Registration Number)
+            if (searchQuery) {
+                query = query.or(`student_name.ilike.%${searchQuery}%,student_id.ilike.%${searchQuery}%,registration_no.ilike.%${searchQuery}%`);
+            }
+
+            const { data, error } = await query;
+            if (error) throw error;
+
+            console.log("Students Synced for Widget");
             return data;
         } catch (error) {
-            console.error("Error fetching recent applications:", error);
+            console.error("Error fetching recent students:", error);
             throw error;
         }
     },
