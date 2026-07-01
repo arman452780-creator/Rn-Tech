@@ -552,19 +552,7 @@
         const toastContainer = document.getElementById('toastContainer');
         let dashboardSubscription = null;
         let studentsDataCache = [];
-        const adminNameDisplay = document.getElementById('adminName');
-        const logoutBtn = document.getElementById('logoutBtn');
-        
-        // Stats Elements
-        const statsElements = {
-            students: document.getElementById('totalStudents'),
-            courses: document.getElementById('activeCourses'),
-            pending: document.getElementById('pendingApps'),
-            messages: document.getElementById('newMessages')
-        };
-        
-        const applicationsList = document.getElementById('applicationsList');
-        let dashboardSubscription = null;
+
 
         // Route Protection
         async function checkAuth() {
