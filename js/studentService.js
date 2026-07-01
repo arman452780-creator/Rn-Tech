@@ -107,12 +107,18 @@ export const studentService = {
     // Delete student
     async deleteStudent(id) {
         const supabase = getSupabase();
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('students')
             .delete()
-            .eq('id', id);
+            .eq('id', id)
+            .select();
 
         if (error) throw error;
+        
+        if (!data || data.length === 0) {
+            throw new Error("Action blocked by database. Please check Supabase RLS (Row Level Security) policies for DELETE on the 'students' table.");
+        }
+        
         return true;
     },
 

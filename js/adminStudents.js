@@ -125,13 +125,42 @@ function openProfileModal(s, isEdit = false) {
     // Header
     const photoImg = document.getElementById('profPhotoImg');
     const photoIcon = document.getElementById('profPhotoIcon');
+    const downloadBtn = document.getElementById('downloadPhotoBtn');
+    
     if (s.profile_photo_url) {
         photoImg.src = s.profile_photo_url;
         photoImg.style.display = 'block';
         photoIcon.style.display = 'none';
+        
+        if (downloadBtn) {
+            downloadBtn.style.display = 'block';
+            downloadBtn.onclick = async (e) => {
+                e.preventDefault();
+                try {
+                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    const response = await fetch(s.profile_photo_url);
+                    const blob = await response.blob();
+                    const blobUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = `${(s.student_name || 'Student').replace(/\s+/g, '_')}_Photo.jpg`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(blobUrl);
+                } catch (err) {
+                    console.error('Download error:', err);
+                    // Fallback if CORS prevents blob download
+                    window.open(s.profile_photo_url, '_blank');
+                } finally {
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Photo';
+                }
+            };
+        }
     } else {
         photoImg.style.display = 'none';
         photoIcon.style.display = 'block';
+        if (downloadBtn) downloadBtn.style.display = 'none';
     }
     
     document.getElementById('profName').innerText = s.student_name || 'N/A';
@@ -205,7 +234,6 @@ function closeProfile() {
     }, 300);
 }
 
-let activePopup = null;
 
 window.closeActionPopup = () => {
     if (activePopup) {
@@ -315,6 +343,8 @@ window.editStudent = (id) => {
 window.deleteStudent = (id) => {
     try {
         studentToDelete = id;
+        document.getElementById('deleteAdminPassword').value = '';
+        document.getElementById('deletePasswordError').style.display = 'none';
         deleteConfirmModal.classList.add('active');
         deleteConfirmModal.style.visibility = 'visible';
         deleteConfirmModal.style.opacity = '1';
@@ -387,11 +417,36 @@ document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
 
 document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
     if (!studentToDelete) return;
+    
+    const passwordInput = document.getElementById('deleteAdminPassword');
+    const errorMsg = document.getElementById('deletePasswordError');
+    const password = passwordInput.value;
+    
+    if (!password) {
+        errorMsg.textContent = "Please enter admin password";
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
     try {
         const btn = document.getElementById('confirmDeleteBtn');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         btn.disabled = true;
+        errorMsg.style.display = 'none';
         
+        // Verify admin password
+        const currentUser = await authService.getCurrentUser();
+        try {
+            await authService.signIn(currentUser.email, password);
+        } catch (authErr) {
+            errorMsg.textContent = "Incorrect password";
+            errorMsg.style.display = 'block';
+            btn.innerHTML = 'Delete';
+            btn.disabled = false;
+            return;
+        }
+        
+        // If password is correct, proceed with deletion
         await studentService.deleteStudent(studentToDelete);
         
         deleteConfirmModal.style.opacity = '0';
@@ -403,6 +458,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async () =
         btn.disabled = false;
         
         await loadInitialData();
+        showToast("Student deleted successfully", 'success');
     } catch (err) {
         alert("Error deleting student: " + err.message);
         document.getElementById('confirmDeleteBtn').innerHTML = 'Delete';

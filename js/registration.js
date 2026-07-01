@@ -393,38 +393,85 @@ export async function generatePDFBlobUrl(registrationNo, studentId, studentData)
     const margin = 15;
     let y = margin;
     
-    // Header
-    doc.setDrawColor(0, 74, 173);
-    doc.setLineWidth(1);
-    doc.line(margin, y + 25, pageWidth - margin, y + 25);
+    // Logo
+    const logoX = 25;
+    const logoY = y + 12;
+    doc.setFillColor(0, 51, 153); // Deep blue
+    doc.circle(logoX, logoY, 13, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text('RN-TECH', logoX, logoY + 1.5, { align: 'center' });
     
-    doc.setTextColor(0, 74, 173);
+    // Main Title
+    const textCenterX = pageWidth / 2;
+    doc.setTextColor(0, 51, 153);
     doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
-    doc.text('RN-TECH COMPUTER ACADEMY', pageWidth/2, y + 10, { align: 'center' });
+    doc.text('RN-TECH COMPUTER ACADEMY', textCenterX, y + 5, { align: 'center' });
     
-    doc.setTextColor(51, 51, 51);
-    doc.setFontSize(10);
-    doc.text('ISO 9001:2015 Certified', pageWidth/2, y + 15, { align: 'center' });
+    // ISO Badge
+    doc.setFillColor(0, 51, 153);
+    doc.roundedRect(textCenterX - 24, y + 7.5, 48, 5.5, 1.2, 1.2, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('ISO 9001:2015 CERTIFIED', textCenterX, y + 11.5, { align: 'center' });
     
+    // Subtitle
+    doc.setTextColor(100, 100, 100);
     doc.setFont('helvetica', 'italic');
-    doc.setFontSize(12);
-    doc.setTextColor(85, 85, 85);
-    doc.text('Raiyam,Madhubani | Phone: +91 8102166667 | Email: razjalal@gamil.com', pageWidth/2, y + 21, { align: 'center' });
+    doc.setFontSize(10);
+    doc.text('Learn Today • Lead Tomorrow', textCenterX, y + 18, { align: 'center' });
     
-    y += 32;
+    // Contact Info Row
+    const contactY = y + 28;
+    doc.setDrawColor(100, 100, 100);
+    doc.setTextColor(100, 100, 100);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setLineWidth(0.3);
     
-    // Title
-    doc.setFillColor(240, 248, 255);
-    doc.setDrawColor(0, 74, 173);
+    // 1. Web
+    const xWeb = textCenterX - 50;
+    doc.circle(xWeb - 6, contactY - 1, 2.2); // globe outline
+    doc.line(xWeb - 8.2, contactY - 1, xWeb - 3.8, contactY - 1); // equator
+    doc.line(xWeb - 6, contactY - 3.2, xWeb - 6, contactY + 1.2); // meridian
+    doc.ellipse(xWeb - 6, contactY - 1, 1, 2.2); // longitude ellipse
+    doc.text('rntechraiyam.com', xWeb - 2, contactY);
+    
+    // 2. Phone
+    const xPhone = textCenterX - 5;
+    doc.setFillColor(100, 100, 100);
+    // Draw a small solid phone/receiver shape (using a rounded rect as a smartphone for simplicity)
+    doc.roundedRect(xPhone - 6, contactY - 3.5, 3, 5, 0.5, 0.5, 'F');
+    doc.text('+91 8102166667', xPhone - 1, contactY);
+    
+    // 3. Email
+    const xMail = textCenterX + 35;
+    doc.rect(xMail - 7, contactY - 3.5, 5, 3.5);
+    doc.line(xMail - 7, contactY - 3.5, xMail - 4.5, contactY - 1.5);
+    doc.line(xMail - 2, contactY - 3.5, xMail - 4.5, contactY - 1.5);
+    doc.text('razjalal@gamil.com', xMail, contactY);
+
+    // Thick Blue Separator Line
+    doc.setDrawColor(0, 51, 153);
+    doc.setLineWidth(1.2);
+    doc.line(margin, y + 34, pageWidth - margin, y + 34);
+    
+    y += 42;
+    
+    // Title: Admission Registration Form
+    doc.setFillColor(242, 248, 255); // Very light blue background
+    doc.setDrawColor(0, 51, 153);
     doc.setLineWidth(0.5);
-    doc.rect(pageWidth/2 - 45, y, 90, 9, 'FD');
-    doc.setTextColor(0, 74, 173);
+    doc.roundedRect(pageWidth/2 - 45, y, 90, 10, 1.5, 1.5, 'FD'); // Fill and stroke with rounded corners
+    doc.setTextColor(0, 51, 153);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
-    doc.text('ADMISSION REGISTRATION FORM', pageWidth/2, y + 6, { align: 'center' });
+    doc.text('ADMISSION REGISTRATION FORM', pageWidth/2, y + 6.5, { align: 'center' });
     
-    y += 15;
+    y += 16;
     
     function drawSectionHeader(title, yPos) {
         doc.setFillColor(0, 74, 173);
@@ -565,7 +612,7 @@ export async function generatePDFBlobUrl(registrationNo, studentId, studentData)
         { label: 'Student Name', value: studentData.student_name },
         { label: 'Father\'s Name', value: studentData.father_name },
         { label: 'Gender', value: studentData.gender },
-        { label: 'Date of Birth', value: studentData.dob },
+        { label: 'Date of Birth', value: studentData.dob ? studentData.dob.split('-').reverse().join('/') : '' },
         { label: 'Mobile Number', value: studentData.mobile },
         { label: 'State', value: studentData.state },
         { label: 'District', value: studentData.district },
