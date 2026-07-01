@@ -139,7 +139,7 @@ export const studentService = {
                 .from('student-photos')
                 .getPublicUrl(path);
 
-            return publicUrlData.publicUrl;
+            return `${publicUrlData.publicUrl}?t=${new Date().getTime()}`;
         } catch (error) {
             console.error('Error uploading photo:', error);
             throw error;

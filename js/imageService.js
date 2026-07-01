@@ -289,7 +289,7 @@ export const imageService = {
             .from('student-photos')
             .getPublicUrl(path);
 
-        return publicUrlData.publicUrl;
+        return `${publicUrlData.publicUrl}?t=${new Date().getTime()}`;
     },
 
     async replaceImage(blob, studentId, year) {
